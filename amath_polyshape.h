@@ -2,6 +2,7 @@
 
 #include "amath_core.h"
 
+#include <fmt/format.h>
 #include <vector>
 #include <math.h>
 #include <stdio.h>
@@ -20,8 +21,8 @@ struct Polyshape {
 
    Polyshape() : center({0, 0}), num_vertex(0), scale(0), rotation(0), star(0), star_ratio(0) {}
 
-   Polyshape(Vec2 center, int num_vertex, float scale, float rotation = 0,
-             bool star = false, float star_ratio = 0.5f)
+   Polyshape(Vec2 center, int num_vertex, float scale, float rotation = 0, bool star = false,
+             float star_ratio = 0.5f)
        : center(center), num_vertex(num_vertex), scale(scale), rotation(rotation), star(star),
          star_ratio(star_ratio){};
 
@@ -50,12 +51,12 @@ struct Polyshape {
    }
 
    void print() {
-      printf("Shape:\n- Center: {%f, %f}\n"
-             "- Scale: %f\n"
-             "- Rotation: %f\n",
-             center.x(),
-             center.y(),
-             scale,
-             rotation);
+      fmt::print("Shape:\n- Center: {{}, {}}\n"
+                 "- Scale: {}\n"
+                 "- Rotation: {}\n",
+                 center.x(),
+                 center.y(),
+                 scale,
+                 rotation);
    }
 };
