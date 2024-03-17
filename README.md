@@ -1,0 +1,1 @@
+Simple algebra and vector math library for game programming exercises done during my Video Game Programming studies at ESAT.
