@@ -8,7 +8,7 @@
 
 #define PI 3.14159265359
 
-using amth::Vec2;
+using amath::Vec2;
 
 struct Polyshape {
    Vec2 center;

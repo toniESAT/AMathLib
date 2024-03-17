@@ -1,12 +1,12 @@
 #pragma once
 
 #include <cmath>
-#include <fmt/format.h>
 #include <immintrin.h>
+#include <fmt/format.h>
 
 #define SMALL_NUMBER 1.e-8f
 
-namespace amth {
+namespace amath {
 
 /********************************/
 /****         VECTORS        ****/
