@@ -1,10 +1,12 @@
 #pragma once
 
 #include <cmath>
+#include <cfloat>
 #include <immintrin.h>
+#define FMT_HEADER_ONLY
 #include <fmt/format.h>
-
-#define SMALL_NUMBER 1.e-8f
+#include <amath_random.h>
+#include <amath_utils.h>
 
 namespace amath {
 
@@ -16,8 +18,8 @@ struct Vec2 {
 
    float d[2];
 
-   Vec2() : d{0, 0} {};
    Vec2(float v0, float v1) : d{v0, v1} {};
+   Vec2() : Vec2(0, 0){};
 
    float x() const { return d[0]; }
    float y() const { return d[1]; }
@@ -27,15 +29,15 @@ struct Vec2 {
    float squared_length() const { return x() * x() + y() * y(); }
    float length() const { return sqrtf(squared_length()); }
 
-   Vec2 normalized(float tolerance = SMALL_NUMBER) const {
+   static Vec2 nan() { return {nanf(""), nanf("")}; }
+
+   Vec2 normalized(float tolerance = FLT_EPSILON) const {
       float l = length();
-      if (l > SMALL_NUMBER) return {x() / l, y() / l};
+      if (l > tolerance) return {x() / l, y() / l};
       else return {0, 0};
    }
 
-   bool is_normalized(float tolerance = SMALL_NUMBER) const {
-      return squared_length() < SMALL_NUMBER;
-   }
+   bool is_normalized(float tolerance = FLT_EPSILON) const { return squared_length() < tolerance; }
 
    Vec2 perpendicular() const { return {-y(), x()}; }
 
@@ -78,8 +80,8 @@ struct Vec3 {
 
    float d[3];
 
-   Vec3() : d{0, 0, 0} {};
    Vec3(float v0, float v1, float v2) : d{v0, v1, v2} {};
+   Vec3() : Vec3(0, 0, 0){};
 
    float x() const { return d[0]; }
    float y() const { return d[1]; }
@@ -91,17 +93,17 @@ struct Vec3 {
    float squared_length() const { return x() * x() + y() * y() + z() * z(); }
    float length() const { return sqrtf(squared_length()); }
 
-   Vec3 normalized(float tolerance = SMALL_NUMBER) const {
+   Vec3 normalized(float tolerance = FLT_EPSILON) const {
       float l = length();
-      if (l > SMALL_NUMBER) return {x() / l, y() / l, z() / l};
+      if (l > tolerance) return {x() / l, y() / l, z() / l};
       else return {0, 0, 0};
    }
 
-   bool is_normalized(float tolerance = SMALL_NUMBER) const {
-      return squared_length() < SMALL_NUMBER;
+   bool is_normalized(float tolerance = FLT_EPSILON) const {
+      return squared_length() < tolerance;
    }
 
-   void print() const { fmt::print("Vector3 [{},{}, {}]", x(), y(), z()); }
+   void print() const { fmt::print("Vector3 [{:.4},{:.4}, {:.4}]", x(), y(), z()); }
 
    Vec3 operator-() const { return {-d[0], -d[1], -d[2]}; }
 
@@ -143,8 +145,8 @@ struct Vec4 {
 
    float d[4];
 
-   Vec4() : d{0, 0, 0, 0} {};
    Vec4(float v0, float v1, float v2, float v3) : d{v0, v1, v2, v3} {};
+   Vec4() : Vec4(0, 0, 0, 0){};
 
    float x() const { return d[0]; }
    float y() const { return d[1]; }
@@ -158,13 +160,13 @@ struct Vec4 {
    float squared_length() const { return x() * x() + y() * y() + z() * z() + w() * w(); }
    float length() const { return sqrtf(squared_length()); }
 
-   Vec4 normalized(float tolerance = SMALL_NUMBER) const {
+   Vec4 normalized(float tolerance = FLT_EPSILON) const {
       float l = length();
-      if (l > SMALL_NUMBER) return {x() / l, y() / l, z() / l, w() / l};
+      if (l > tolerance) return {x() / l, y() / l, z() / l, w() / l};
       else return {0, 0, 0, 0};
    }
 
-   bool is_normalized(float tolerance = SMALL_NUMBER) { return squared_length() < SMALL_NUMBER; }
+   bool is_normalized(float tolerance = FLT_EPSILON) { return squared_length() < tolerance; }
 
    void print() const { fmt::print("Vector4 [{},{}, {}, {}]", x(), y(), z(), w()); }
 
@@ -231,6 +233,9 @@ float dot_product(const Vec4 &v1, const Vec4 &v2) {
    return v1.x() * v2.x() + v1.y() * v2.y() + v1.z() * v2.z() + v1.w() * v2.w();
 }
 
+typedef Vec2 Point2;
+typedef Vec3 Point3;
+
 /********************************/
 /****        MATRICES        ****/
 /********************************/
@@ -238,13 +243,21 @@ float dot_product(const Vec4 &v1, const Vec4 &v2) {
 struct Mat2 {
    float d[4];
 
-   Mat2() : d{0, 0, 0, 0} {};
    Mat2(float m0, float m1, float m2, float m3) : d{m0, m1, m2, m3} {};
+   Mat2(float k) : Mat2(k, k, k, k) {}
+   Mat2() : d{0} {};
 
-   static Mat2 identity() { return {1, 0, 0, 1}; }
    static int size() { return 4; }
+   static Mat2 identity() { return {1, 0, 0, 1}; }
+   static Mat2 random() {
+      static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
+      return {rng.generate(), rng.generate(), rng.generate(), rng.generate()};
+   }
+   static Mat2 nan() { return {nanf(""), nanf(""), nanf(""), nanf("")}; }
 
-   float determinant() const { return d[0] * d[3] - d[1] * d[2]; }
+   void print() const { fmt::print("2D Matrix\n[{}][{}]\n[{}][{}]", d[0], d[2], d[1], d[3]); }
+
+   float determinant() const { return d[0] * d[3] - d[1] * d[2]; } // By Sarrus' rule
 
    Vec2 get_column(int j) const { return {d[2 * j], d[2 * j + 1]}; }
    Vec2 get_row(int i) const { return {d[i], d[i + 2]}; }
@@ -293,18 +306,40 @@ struct Mat2 {
 struct Mat3 {
    float d[9];
 
-   Mat3() : d{0, 0, 0, 0, 0, 0, 0, 0, 0} {};
    Mat3(float m0, float m1, float m2, float m3, float m4, float m5, float m6, float m7, float m8)
        : d{m0, m1, m2, m3, m4, m5, m6, m7, m8} {};
+   Mat3(float k) : Mat3(k, k, k, k, k, k, k, k, k) {}
+   Mat3() : d{0} {};
 
+   Mat3(Vec3 v0, Vec3 v1, Vec3 v2) {
+      set_column(0, v0);
+      set_column(1, v1);
+      set_column(2, v2);
+   }
+
+   static int size() { return 9; }
    static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
+   static Mat3 random() {
+      static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
+      Mat3 random_matrix;
+      for (int i = 0; i < random_matrix.size(); i++) random_matrix.d[i] = rng.generate();
+      return random_matrix;
+   }
 
    static Mat3 scaling(float sx, float sy) { return {sx, 0, 0, 0, sy, 0, 0, 0, 1}; }
    static Mat3 translation(float tx, float ty) { return {1, 0, 0, 0, 1, 0, tx, ty, 1}; }
    static Mat3 rotation(float a) { return {cosf(a), -sinf(a), 0, sinf(a), cosf(a), 0, 0, 0, 1}; }
 
-   // TODO
-   float determinant() { return d[0] * d[3] - d[1] * d[2]; }
+   void print() const {
+      fmt::print("3D Matrix\n");
+      for (int i = 0; i < 3; i++)
+         fmt::print("[{:.4f}][{:.4f}][{:.4f}]\n", d[3 * i], d[3 * i + 1], d[3 * i + 2]);
+   }
+
+   float determinant() { // By Sarrus' rule
+      return d[0] * d[4] * d[8] + d[2] * d[3] * d[7] + d[1] * d[5] * d[6] - d[2] * d[4] * d[6] -
+             d[1] * d[3] * d[8] - d[0] * d[5] * d[7];
+   }
 
    Vec3 get_column(int j) const { return {d[3 * j], d[3 * j + 1], d[3 * j + 2]}; }
    Vec3 get_row(int i) const { return {d[i], d[i + 3], d[i + 6]}; }
@@ -317,12 +352,6 @@ struct Mat3 {
       d[i] = v[0];
       d[i + 3] = v[1];
       d[i + 6] = v[2];
-   }
-
-   Mat3(Vec3 v0, Vec3 v1, Vec3 v2) {
-      set_column(0, v0);
-      set_column(1, v1);
-      set_column(2, v2);
    }
 
    float operator[](int i) const { return d[i]; }
@@ -362,20 +391,47 @@ struct Mat3 {
       return {
           d[0] * k, d[1] * k, d[2] * k, d[3] * k, d[4] * k, d[5] * k, d[6] * k, d[7] * k, d[8] * k};
    }
+   Mat3 &operator*=(float k) {
+      for (int i = 0; i < this->size(); i++) d[i] *= k;
+      return *this;
+   }
    Mat3 operator/(float k) const { return *this * (1 / k); }
 };
 
 struct Mat4 {
    float d[16];
 
-   Mat4() : d{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} {};
    Mat4(float m0, float m1, float m2, float m3, float m4, float m5, float m6, float m7, float m8,
         float m9, float m10, float m11, float m12, float m13, float m14, float m15)
        : d{m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15} {};
+   Mat4(float k) : Mat4(k, k, k, k, k, k, k, k, k, k, k, k, k, k, k, k) {}
+   Mat4() : d{0} {};
 
+   Mat4(Vec4 v0, Vec4 v1, Vec4 v2, Vec4 v3) {
+      set_column(0, v0);
+      set_column(1, v1);
+      set_column(2, v2);
+      set_column(3, v3);
+   }
+
+   static int size() { return 16; }
    static Mat4 identity() { return {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}; }
+   static Mat4 random() {
+      static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
+      Mat4 random_matrix;
+      for (int i = 0; i < random_matrix.size(); i++) random_matrix.d[i] = rng.generate();
+      return random_matrix;
+   }
 
-   // TODO
+   void print() const {
+      fmt::print("4D Matrix\n");
+      for (int i = 0; i < 4; i++)
+         fmt::print("[{}][{}][{}][{}]\n", d[4 * i], d[4 * i + 1], d[4 * i + 2], d[4 * i + 3]);
+   }
+
+   float cofactor(size_t row, size_t col) {
+      // TODO
+   }
    float determinant() const { return d[0] * d[3] - d[1] * d[2]; }
 
    Vec4 get_column(int j) const { return {d[4 * j], d[4 * j + 1], d[4 * j + 2], d[4 * j + 3]}; }
@@ -391,13 +447,6 @@ struct Mat4 {
       d[i + 4] = v[1];
       d[i + 8] = v[2];
       d[i + 12] = v[3];
-   }
-
-   Mat4(Vec4 v0, Vec4 v1, Vec4 v2, Vec4 v3) {
-      set_column(0, v0);
-      set_column(1, v1);
-      set_column(2, v2);
-      set_column(3, v3);
    }
 
    float operator[](int i) const { return d[i]; }
@@ -464,6 +513,10 @@ struct Mat4 {
               d[13] * k,
               d[14] * k,
               d[15] * k};
+   }
+   Mat4 &operator*=(float k) {
+      for (int i = 0; i < this->size(); i++) d[i] *= k;
+      return *this;
    }
    Mat4 operator/(float k) const { return *this * (1 / k); }
 };
@@ -556,4 +609,4 @@ Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
 }
 Mat4 operator*(const Mat4 &m1, const Mat4 &m2) { return mat_mul(m1, m2); }
 
-} // namespace amth
+} // namespace amath
