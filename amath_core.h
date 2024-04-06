@@ -37,7 +37,9 @@ struct Vec2 {
       else return {0, 0};
    }
 
-   bool is_normalized(float tolerance = FLT_EPSILON) const { return squared_length() < tolerance; }
+   bool is_normalized(const float tolerance = FLT_EPSILON) const {
+      return squared_length() < tolerance;
+   }
 
    Vec2 perpendicular() const { return {-y(), x()}; }
 
@@ -45,10 +47,10 @@ struct Vec2 {
 
    Vec2 operator-() const { return {-d[0], -d[1]}; }
 
-   Vec2 operator+(Vec2 &v) const { return {x() + v.x(), y() + v.y()}; }
-   Vec2 operator-(Vec2 &v) const { return {x() - v.x(), y() - v.y()}; }
-   Vec2 operator+(float k) const { return {x() + k, y() + k}; }
-   Vec2 operator-(float k) const { return {x() - k, y() - k}; }
+   Vec2 operator+(const Vec2 &v) const { return {x() + v.x(), y() + v.y()}; }
+   Vec2 operator-(const Vec2 &v) const { return {x() - v.x(), y() - v.y()}; }
+   Vec2 operator+(const float k) const { return {x() + k, y() + k}; }
+   Vec2 operator-(const float k) const { return {x() - k, y() - k}; }
 
    Vec2 &operator+=(Vec2 &v) {
       x() = x() + v.x();
@@ -61,19 +63,19 @@ struct Vec2 {
       return (*this);
    }
 
-   Vec2 operator*(float k) const { return {x() * k, y() * k}; }
-   Vec2 &operator*=(float k) {
+   Vec2 operator*(const float k) const { return {x() * k, y() * k}; }
+   Vec2 &operator*=(const float k) {
       d[0] *= k;
       d[1] *= k;
       return *this;
    }
-   Vec2 operator/(float k) const { return {x() / k, y() / k}; }
+   Vec2 operator/(const float k) const { return {x() / k, y() / k}; }
 
-   bool operator==(Vec2 &v) const { return (x() == v.x() && y() == v.y()); }
-   bool operator!=(Vec2 &v) const { return (x() != v.x() || y() != v.y()); }
+   bool operator==(const Vec2 &v) const { return (x() == v.x() && y() == v.y()); }
+   bool operator!=(const Vec2 &v) const { return (x() != v.x() || y() != v.y()); }
 
-   float operator[](int i) const { return d[i]; }
-   float &operator[](int i) { return d[i]; }
+   float operator[](const int i) const { return d[i]; }
+   float &operator[](const int i) { return d[i]; }
 };
 
 struct Vec3 {
@@ -99,7 +101,7 @@ struct Vec3 {
       else return {0, 0, 0};
    }
 
-   bool is_normalized(float tolerance = FLT_EPSILON) const {
+   bool is_normalized(const float tolerance = FLT_EPSILON) const {
       return squared_length() < tolerance;
    }
 
@@ -107,10 +109,10 @@ struct Vec3 {
 
    Vec3 operator-() const { return {-d[0], -d[1], -d[2]}; }
 
-   Vec3 operator-(Vec3 &v) const { return {x() - v.x(), y() - v.y(), z() - v.z()}; }
-   Vec3 operator+(Vec3 &v) const { return {x() + v.x(), y() + v.y(), z() + v.z()}; }
-   Vec3 operator+(float k) const { return {x() + k, y() + k, z() + k}; }
-   Vec3 operator-(float k) const { return {x() - k, y() - k, z() - k}; }
+   Vec3 operator-(const Vec3 &v) const { return {x() - v.x(), y() - v.y(), z() - v.z()}; }
+   Vec3 operator+(const Vec3 &v) const { return {x() + v.x(), y() + v.y(), z() + v.z()}; }
+   Vec3 operator+(const float k) const { return {x() + k, y() + k, z() + k}; }
+   Vec3 operator-(const float k) const { return {x() - k, y() - k, z() - k}; }
 
    Vec3 &operator+=(Vec3 &v) {
       x() = x() + v.x();
@@ -125,20 +127,20 @@ struct Vec3 {
       return (*this);
    }
 
-   Vec3 operator*(float k) const { return {x() * k, y() * k, z() * k}; }
-   Vec3 &operator*=(float k) {
+   Vec3 operator*(const float k) const { return {x() * k, y() * k, z() * k}; }
+   Vec3 &operator*=(const float k) {
       d[0] *= k;
       d[1] *= k;
       d[2] *= k;
       return *this;
    }
-   Vec3 operator/(float k) const { return {x() / k, y() / k, z() / k}; }
+   Vec3 operator/(const float k) const { return {x() / k, y() / k, z() / k}; }
 
-   bool operator==(Vec3 &v) const { return (x() == v.x() && y() == v.y() && z() == v.z()); }
-   bool operator!=(Vec3 &v) const { return (x() != v.x() || y() != v.y() || z() != v.z()); }
+   bool operator==(const Vec3 &v) const { return (x() == v.x() && y() == v.y() && z() == v.z()); }
+   bool operator!=(const Vec3 &v) const { return (x() != v.x() || y() != v.y() || z() != v.z()); }
 
-   float operator[](int i) const { return d[i]; }
-   float &operator[](int i) { return d[i]; }
+   float operator[](const int i) const { return d[i]; }
+   float &operator[](const int i) { return d[i]; }
 };
 
 struct Vec4 {
@@ -166,16 +168,20 @@ struct Vec4 {
       else return {0, 0, 0, 0};
    }
 
-   bool is_normalized(float tolerance = FLT_EPSILON) { return squared_length() < tolerance; }
+   bool is_normalized(const float tolerance = FLT_EPSILON) { return squared_length() < tolerance; }
 
    void print() const { fmt::print("Vector4 [{},{}, {}, {}]", x(), y(), z(), w()); }
 
    Vec4 operator-() const { return {-d[0], -d[1], -d[2], -d[3]}; }
 
-   Vec4 operator-(Vec4 &v) const { return {x() - v.x(), y() - v.y(), z() - v.z(), w() + v.w()}; }
-   Vec4 operator+(Vec4 &v) const { return {x() + v.x(), y() + v.y(), z() + v.z(), w() - v.w()}; }
-   Vec4 operator+(float k) const { return {x() + k, y() + k, z() + k, w() + k}; }
-   Vec4 operator-(float k) const { return {x() - k, y() - k, z() - k, w() - k}; }
+   Vec4 operator-(const Vec4 &v) const {
+      return {x() - v.x(), y() - v.y(), z() - v.z(), w() + v.w()};
+   }
+   Vec4 operator+(const Vec4 &v) const {
+      return {x() + v.x(), y() + v.y(), z() + v.z(), w() - v.w()};
+   }
+   Vec4 operator+(const float k) const { return {x() + k, y() + k, z() + k, w() + k}; }
+   Vec4 operator-(const float k) const { return {x() - k, y() - k, z() - k, w() - k}; }
 
    Vec4 &operator+=(Vec4 &v) {
       x() += v.x();
@@ -192,25 +198,25 @@ struct Vec4 {
       return (*this);
    }
 
-   Vec4 operator*(float k) const { return {x() * k, y() * k, z() * k, w() * k}; }
-   Vec4 &operator*=(float k) {
+   Vec4 operator*(const float k) const { return {x() * k, y() * k, z() * k, w() * k}; }
+   Vec4 &operator*=(const float k) {
       d[0] *= k;
       d[1] *= k;
       d[2] *= k;
       d[3] *= k;
       return *this;
    }
-   Vec4 operator/(float k) const { return {x() / k, y() / k, z() / k, w() / k}; }
+   Vec4 operator/(const float k) const { return {x() / k, y() / k, z() / k, w() / k}; }
 
-   bool operator==(Vec4 &v) const {
+   bool operator==(const Vec4 &v) const {
       return (x() == v.x() && y() == v.y() && z() == v.z() && w() == v.w());
    }
-   bool operator!=(Vec4 &v) const {
+   bool operator!=(const Vec4 &v) const {
       return (x() != v.x() || y() != v.y() || z() != v.z() || w() != v.w());
    }
 
-   float operator[](int i) const { return d[i]; }
-   float &operator[](int i) { return d[i]; }
+   float operator[](const int i) const { return d[i]; }
+   float &operator[](const int i) { return d[i]; }
 };
 
 Vec2 vec_add(const Vec2 &v1, const Vec2 &v2) { return {v1.x() + v2.x(), v1.y() + v2.y()}; }
@@ -246,6 +252,10 @@ struct Mat2 {
    Mat2(float m0, float m1, float m2, float m3) : d{m0, m1, m2, m3} {};
    Mat2(float k) : Mat2(k, k, k, k) {}
    Mat2() : d{0} {};
+   Mat2(const Vec2& v0, const Vec2& v1) {
+      set_column(0, v0);
+      set_column(1, v1);
+   }
 
    static int size() { return 4; }
    static Mat2 identity() { return {1, 0, 0, 1}; }
@@ -259,21 +269,18 @@ struct Mat2 {
 
    float determinant() const { return d[0] * d[3] - d[1] * d[2]; } // By Sarrus' rule
 
-   Vec2 get_column(int j) const { return {d[2 * j], d[2 * j + 1]}; }
-   Vec2 get_row(int i) const { return {d[i], d[i + 2]}; }
-   void set_column(int j, const Vec2 &v) {
+   Vec2 get_column(const int j) const { return {d[2 * j], d[2 * j + 1]}; }
+   Vec2 get_row(const int i) const { return {d[i], d[i + 2]}; }
+   void set_column(const int j, const Vec2 &v) {
       d[2 * j] = v[0];
       d[2 * j + 1] = v[1];
    }
-   void set_row(int i, const Vec2 &v) {
+   void set_row(const int i, const Vec2 &v) {
       d[i] = v[0];
       d[i + 2] = v[1];
    }
 
-   Mat2(Vec2 v0, Vec2 v1) {
-      set_column(0, v0);
-      set_column(1, v1);
-   }
+
 
    float operator[](int i) const { return d[i]; }
    float &operator[](int i) { return d[i]; }
@@ -292,15 +299,15 @@ struct Mat2 {
       return {d[0] - m.d[0], d[1] - m.d[1], d[2] - m.d[2], d[3] - m.d[3]};
    }
 
-   Mat2 operator*(float k) const { return {d[0] * k, d[1] * k, d[2] * k, d[3] * k}; }
-   Mat2 &operator*=(float k) {
+   Mat2 operator*(const float k) const { return {d[0] * k, d[1] * k, d[2] * k, d[3] * k}; }
+   Mat2 &operator*=(const float k) {
       d[0] *= k;
       d[1] *= k;
       d[2] *= k;
       d[3] *= k;
       return *this;
    }
-   Mat2 operator/(float k) const { return *this * (1 / k); }
+   Mat2 operator/(const float k) const { return *this * (1 / k); }
 };
 
 struct Mat3 {
@@ -310,8 +317,7 @@ struct Mat3 {
        : d{m0, m1, m2, m3, m4, m5, m6, m7, m8} {};
    Mat3(float k) : Mat3(k, k, k, k, k, k, k, k, k) {}
    Mat3() : d{0} {};
-
-   Mat3(Vec3 v0, Vec3 v1, Vec3 v2) {
+   Mat3(const Vec3 &v0, const Vec3 &v1, const Vec3 &v2) {
       set_column(0, v0);
       set_column(1, v1);
       set_column(2, v2);
@@ -406,8 +412,7 @@ struct Mat4 {
        : d{m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15} {};
    Mat4(float k) : Mat4(k, k, k, k, k, k, k, k, k, k, k, k, k, k, k, k) {}
    Mat4() : d{0} {};
-
-   Mat4(Vec4 v0, Vec4 v1, Vec4 v2, Vec4 v3) {
+   Mat4(const Vec4& v0, const Vec4& v1, const Vec4& v2, const Vec4& v3) {
       set_column(0, v0);
       set_column(1, v1);
       set_column(2, v2);
