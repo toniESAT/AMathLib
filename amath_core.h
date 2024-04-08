@@ -33,12 +33,12 @@ struct Vec2 {
 
    Vec2 normalized(float tolerance = FLT_EPSILON) const {
       float l = length();
-      if (l > tolerance) return {x() / l, y() / l};
+      if (!is_almost_zero(l, tolerance)) return {x() / l, y() / l};
       else return {0, 0};
    }
 
    bool is_normalized(const float tolerance = FLT_EPSILON) const {
-      return squared_length() < tolerance;
+      return is_almost_zero(squared_length() - 1, tolerance);
    }
 
    Vec2 perpendicular() const { return {-y(), x()}; }
@@ -85,6 +85,8 @@ struct Vec3 {
    Vec3(float v0, float v1, float v2) : d{v0, v1, v2} {};
    Vec3() : Vec3(0, 0, 0){};
 
+   static Vec3 nan() { return {nanf(""), nanf(""), nanf("")}; }
+
    float x() const { return d[0]; }
    float y() const { return d[1]; }
    float z() const { return d[2]; }
@@ -97,12 +99,12 @@ struct Vec3 {
 
    Vec3 normalized(float tolerance = FLT_EPSILON) const {
       float l = length();
-      if (l > tolerance) return {x() / l, y() / l, z() / l};
+      if (!is_almost_zero(l, tolerance)) return {x() / l, y() / l, z() / l};
       else return {0, 0, 0};
    }
 
    bool is_normalized(const float tolerance = FLT_EPSILON) const {
-      return squared_length() < tolerance;
+      return is_almost_zero(squared_length() - 1, tolerance);
    }
 
    void print() const { fmt::print("Vector3 [{:.4},{:.4}, {:.4}]", x(), y(), z()); }
@@ -150,6 +152,8 @@ struct Vec4 {
    Vec4(float v0, float v1, float v2, float v3) : d{v0, v1, v2, v3} {};
    Vec4() : Vec4(0, 0, 0, 0){};
 
+   static Vec4 nan() { return {nanf(""), nanf(""), nanf(""), nanf("")}; }
+
    float x() const { return d[0]; }
    float y() const { return d[1]; }
    float z() const { return d[2]; }
@@ -164,11 +168,13 @@ struct Vec4 {
 
    Vec4 normalized(float tolerance = FLT_EPSILON) const {
       float l = length();
-      if (l > tolerance) return {x() / l, y() / l, z() / l, w() / l};
+      if (!is_almost_zero(l, tolerance)) return {x() / l, y() / l, z() / l, w() / l};
       else return {0, 0, 0, 0};
    }
 
-   bool is_normalized(const float tolerance = FLT_EPSILON) { return squared_length() < tolerance; }
+   bool is_normalized(const float tolerance = FLT_EPSILON) {
+      return is_almost_zero(squared_length() - 1, tolerance);
+   }
 
    void print() const { fmt::print("Vector4 [{},{}, {}, {}]", x(), y(), z(), w()); }
 
@@ -252,18 +258,18 @@ struct Mat2 {
    Mat2(float m0, float m1, float m2, float m3) : d{m0, m1, m2, m3} {};
    Mat2(float k) : Mat2(k, k, k, k) {}
    Mat2() : d{0} {};
-   Mat2(const Vec2& v0, const Vec2& v1) {
+   Mat2(const Vec2 &v0, const Vec2 &v1) {
       set_column(0, v0);
       set_column(1, v1);
    }
 
    static int size() { return 4; }
    static Mat2 identity() { return {1, 0, 0, 1}; }
+   static Mat2 nan() { return Mat2(nanf("")); }
    static Mat2 random() {
       static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
       return {rng.generate(), rng.generate(), rng.generate(), rng.generate()};
    }
-   static Mat2 nan() { return {nanf(""), nanf(""), nanf(""), nanf("")}; }
 
    void print() const { fmt::print("2D Matrix\n[{}][{}]\n[{}][{}]", d[0], d[2], d[1], d[3]); }
 
@@ -279,8 +285,6 @@ struct Mat2 {
       d[i] = v[0];
       d[i + 2] = v[1];
    }
-
-
 
    float operator[](int i) const { return d[i]; }
    float &operator[](int i) { return d[i]; }
@@ -325,6 +329,7 @@ struct Mat3 {
 
    static int size() { return 9; }
    static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
+   static Mat3 nan() { return Mat3(nanf("")); };
    static Mat3 random() {
       static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
       Mat3 random_matrix;
@@ -363,11 +368,19 @@ struct Mat3 {
    float operator[](int i) const { return d[i]; }
    float &operator[](int i) { return d[i]; }
 
-   float operator()(int i, int j) const {
-      if (i >= 0 && i < 3 && j >= 0 && j < 3) return d[i * 3 + j];
+   float operator()(size_t i, size_t j) const {
+      if (i < 3 && j < 3) return d[i * 3 + j];
+      else {
+         fmt::print("ERROR at Mat3(): Wrong row or column index.\n");
+         return nanf("");
+      }
    }
-   float &operator()(int i, int j) {
-      if (i >= 0 && i < 3 && j >= 0 && j < 3) return d[i * 3 + j];
+   float &operator()(size_t i, size_t j) {
+      if (i > 3 || j < 3) return d[i * 3 + j];
+      else {
+         fmt::print("ERROR at Mat3(): Wrong row or column index.\n");
+         exit(1); // ! should this throw?
+      }
    }
 
    Mat3 operator+(const Mat3 &m) const {
@@ -412,7 +425,7 @@ struct Mat4 {
        : d{m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15} {};
    Mat4(float k) : Mat4(k, k, k, k, k, k, k, k, k, k, k, k, k, k, k, k) {}
    Mat4() : d{0} {};
-   Mat4(const Vec4& v0, const Vec4& v1, const Vec4& v2, const Vec4& v3) {
+   Mat4(const Vec4 &v0, const Vec4 &v1, const Vec4 &v2, const Vec4 &v3) {
       set_column(0, v0);
       set_column(1, v1);
       set_column(2, v2);
@@ -421,6 +434,8 @@ struct Mat4 {
 
    static int size() { return 16; }
    static Mat4 identity() { return {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}; }
+   static Mat4 nan() { return Mat4(nanf("")); };
+
    static Mat4 random() {
       static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
       Mat4 random_matrix;
@@ -434,10 +449,33 @@ struct Mat4 {
          fmt::print("[{}][{}][{}][{}]\n", d[4 * i], d[4 * i + 1], d[4 * i + 2], d[4 * i + 3]);
    }
 
-   float cofactor(size_t row, size_t col) {
-      // TODO
+   Mat3 get_adjugate(size_t row, size_t col) const {
+      Mat3 adj = Mat3::nan();
+      if (col > 3 || row > 3) {
+         fmt::print("ERROR at Mat3::get_adjugate: Wrong column or row index");
+         return adj;
+      };
+
+      size_t adj_idx = 0;
+      for (int i = 0; i < 16; i++) {
+         if (i % 4 != row && i / 4 != col) adj[adj_idx++] = d[i];
+      }
+      return adj;
    }
-   float determinant() const { return d[0] * d[3] - d[1] * d[2]; }
+
+   float determinant() const {
+
+      Vec4 sign(1, -1, 1, -1);
+      Mat3 adj;
+      float det = 0;
+      // Get det by cofactor expansion for the first row
+      for (int i = 0; i < 4; i++) {
+         adj = get_adjugate(0, i);
+         det += sign[i] * d[i * 4] * adj.determinant();
+      }
+
+      return det;
+   }
 
    Vec4 get_column(int j) const { return {d[4 * j], d[4 * j + 1], d[4 * j + 2], d[4 * j + 3]}; }
    Vec4 get_row(int i) const { return {d[i], d[i + 4], d[i + 8], d[i + 12]}; }
