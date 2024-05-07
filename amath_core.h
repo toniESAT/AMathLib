@@ -436,6 +436,44 @@ struct Mat4 {
    static Mat4 identity() { return {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1}; }
    static Mat4 nan() { return Mat4(nanf("")); };
 
+   static Mat4 scaling(float sx, float sy, float sz) {
+      return {sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1};
+   }
+   static Mat4 translation(float tx, float ty, float tz) {
+      return {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, tx, ty, tz, 1};
+   }
+   static Mat4 rotationX(float a) {
+      return {1, 0, 0, 0, 0, cosf(a), -sinf(a), 0, 0, sinf(a), cosf(a), 0, 0, 0, 0, 1};
+   }
+   static Mat4 rotationY(float a) {
+      return {cosf(a), 0, sinf(a), 0, 0, 1, 0, 0, -sinf(a), 0, cosf(a), 0, 0, 0, 0, 1};
+   }
+   static Mat4 rotationZ(float a) {
+      return {cosf(a), sinf(a), 0, 0, -sinf(a), cosf(a), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+   }
+
+   static Mat4 perspective(float fov = PI / 2, float aspect = 1, float zNear = 0,
+                           float zFar = 1000) {
+      return {1 / aspect * tanf(fov / 2),
+              0,
+              0,
+              0,
+              0,
+              1 / tanf(fov / 2),
+              0,
+              0,
+              0,
+              0,
+              (zNear + zFar) / (zNear - zFar),
+              1,
+              0,
+              0,
+              2 * zNear * zFar / (zNear - zFar),
+              0
+
+      };
+   }
+
    static Mat4 random() {
       static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
       Mat4 random_matrix;
@@ -651,5 +689,13 @@ Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
    return m3;
 }
 Mat4 operator*(const Mat4 &m1, const Mat4 &m2) { return mat_mul(m1, m2); }
+
+// Cross product
+Vec4 cross(const Vec4 &v1, const Vec4 &v2) {
+   return {Vec4(v1.y() * v2.z() - v1.z() * v2.y(),
+                v1.z() * v2.x() - v1.x() * v2.z(),
+                v1.x() * v2.y() - v1.y() * v2.x(),
+                1)};
+}
 
 } // namespace amath
