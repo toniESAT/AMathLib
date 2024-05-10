@@ -19,6 +19,7 @@ struct Vec2 {
    float d[2];
 
    Vec2(float v0, float v1) : d{v0, v1} {};
+   Vec2(float v) : d{v, v} {};
    Vec2() : Vec2(0, 0){};
 
    float x() const { return d[0]; }
@@ -83,6 +84,7 @@ struct Vec3 {
    float d[3];
 
    Vec3(float v0, float v1, float v2) : d{v0, v1, v2} {};
+   Vec3(float v) : d{v, v, v} {};
    Vec3() : Vec3(0, 0, 0){};
 
    static Vec3 nan() { return {nanf(""), nanf(""), nanf("")}; }
@@ -150,6 +152,7 @@ struct Vec4 {
    float d[4];
 
    Vec4(float v0, float v1, float v2, float v3) : d{v0, v1, v2, v3} {};
+   Vec4(float v) : d{v, v, v, v} {};
    Vec4() : Vec4(0, 0, 0, 0){};
 
    static Vec4 nan() { return {nanf(""), nanf(""), nanf(""), nanf("")}; }
@@ -172,6 +175,14 @@ struct Vec4 {
       else return {0, 0, 0, 0};
    }
 
+   Vec4 normalized_homogeneous(float tolerance = FLT_EPSILON) const {
+      if (d[3] < tolerance) {
+         return normalized();
+      } else {
+         return *this * (1.f / d[3]);
+      }
+   }
+
    bool is_normalized(const float tolerance = FLT_EPSILON) {
       return is_almost_zero(squared_length() - 1, tolerance);
    }
@@ -181,10 +192,10 @@ struct Vec4 {
    Vec4 operator-() const { return {-d[0], -d[1], -d[2], -d[3]}; }
 
    Vec4 operator-(const Vec4 &v) const {
-      return {x() - v.x(), y() - v.y(), z() - v.z(), w() + v.w()};
+      return {x() - v.x(), y() - v.y(), z() - v.z(), w() - v.w()};
    }
    Vec4 operator+(const Vec4 &v) const {
-      return {x() + v.x(), y() + v.y(), z() + v.z(), w() - v.w()};
+      return {x() + v.x(), y() + v.y(), z() + v.z(), w() + v.w()};
    }
    Vec4 operator+(const float k) const { return {x() + k, y() + k, z() + k, w() + k}; }
    Vec4 operator-(const float k) const { return {x() - k, y() - k, z() - k, w() - k}; }
@@ -469,9 +480,7 @@ struct Mat4 {
               0,
               0,
               2 * zNear * zFar / (zNear - zFar),
-              0
-
-      };
+              0};
    }
 
    static Mat4 random() {
@@ -529,6 +538,10 @@ struct Mat4 {
       d[i + 8] = v[2];
       d[i + 12] = v[3];
    }
+
+   std::vector<Vec4> transform_points(const std::vector<Vec4> &points) const;
+
+   // Operator overloads
 
    float operator[](int i) const { return d[i]; }
    float &operator[](int i) { return d[i]; }
@@ -696,6 +709,13 @@ Vec4 cross_product(const Vec4 &v1, const Vec4 &v2) {
                 v1.z() * v2.x() - v1.x() * v2.z(),
                 v1.x() * v2.y() - v1.y() * v2.x(),
                 0)};
+}
+
+std::vector<Vec4> Mat4::transform_points(const std::vector<Vec4> &points) const {
+   std::vector<Vec4> transformed_points;
+   transformed_points.reserve(points.size());
+   for (auto p : points) transformed_points.push_back(mat_mul(*this, p));
+   return transformed_points;
 }
 
 } // namespace amath

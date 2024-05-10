@@ -20,17 +20,6 @@ float distance_point_line(const Point2 &point, const Point2 &plane_point,
 // float distance_point_plane(const Point3 &point, const Point3 &plane_point,
 //                            const Vec3 &plane_normal) {}
 
-std::vector<float> transform_points(const std::vector<float> &points, const Mat3 &transform) {
-   std::vector<float> transformed_points(points.size());
-   Vec3 point;
-   for (int i = 0; i < points.size(); i += 2) {
-      point = {points[i], points[i + 1], 1};
-      point = mat_mul(transform, point);
-      transformed_points[i] = point.x();
-      transformed_points[i + 1] = point.y();
-   }
-   return transformed_points;
-}
 
 Mat3 combine_transforms(std::vector<Mat3> transforms) {
    Mat3 result = Mat3::identity();
