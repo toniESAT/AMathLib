@@ -4,6 +4,9 @@
 #include <vector>
 #include <algorithm>
 
+#define min(a,b) ((a)<(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
+
 namespace amath {
 constexpr float kSmallNumber = 1.e-8f;
 
