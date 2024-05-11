@@ -44,7 +44,7 @@ struct Vec2 {
 
    Vec2 perpendicular() const { return {-y(), x()}; }
 
-   void print() const { fmt::print("Vector2 [{},{}]", x(), y()); }
+   void print() const { fmt::print("Vector2 [{},{}]\n", x(), y()); }
 
    Vec2 operator-() const { return {-d[0], -d[1]}; }
 
@@ -109,7 +109,7 @@ struct Vec3 {
       return is_almost_zero(squared_length() - 1, tolerance);
    }
 
-   void print() const { fmt::print("Vector3 [{:.4},{:.4}, {:.4}]", x(), y(), z()); }
+   void print() const { fmt::print("Vector3 [{:.4},{:.4}, {:.4}]\n", x(), y(), z()); }
 
    Vec3 operator-() const { return {-d[0], -d[1], -d[2]}; }
 
@@ -187,7 +187,7 @@ struct Vec4 {
       return is_almost_zero(squared_length() - 1, tolerance);
    }
 
-   void print() const { fmt::print("Vector4 [{},{}, {}, {}]", x(), y(), z(), w()); }
+   void print() const { fmt::print("Vector4 [{},{}, {}, {}]\n", x(), y(), z(), w()); }
 
    Vec4 operator-() const { return {-d[0], -d[1], -d[2], -d[3]}; }
 
@@ -465,21 +465,21 @@ struct Mat4 {
 
    static Mat4 perspective(float fov = PI / 2, float aspect = 1, float zNear = 0,
                            float zFar = 1000) {
-      return {1 / aspect * tanf(fov / 2),
+      return {1.f / (aspect * tanf(fov / 2)),
               0,
               0,
               0,
               0,
-              1 / tanf(fov / 2),
+              1.f / tanf(fov / 2),
               0,
               0,
               0,
               0,
-              (zNear + zFar) / (zNear - zFar),
+              zFar / (zFar - zNear),
               1,
               0,
               0,
-              2 * zNear * zFar / (zNear - zFar),
+              (-zNear * zFar) / (zFar - zNear),
               0};
    }
 
@@ -493,7 +493,8 @@ struct Mat4 {
    void print() const {
       fmt::print("4D Matrix\n");
       for (int i = 0; i < 4; i++)
-         fmt::print("[{}][{}][{}][{}]\n", d[4 * i], d[4 * i + 1], d[4 * i + 2], d[4 * i + 3]);
+         fmt::print("[{}][{}][{}][{}]\n", d[4 * 0 + i], d[4 * 1 + i], d[4 * 2 + i], d[4 * 3 + i]);
+      fmt::print("\n");
    }
 
    Mat3 get_adjugate(size_t row, size_t col) const {
