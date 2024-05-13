@@ -20,7 +20,6 @@ float distance_point_line(const Point2 &point, const Point2 &plane_point,
 // float distance_point_plane(const Point3 &point, const Point3 &plane_point,
 //                            const Vec3 &plane_normal) {}
 
-
 Mat3 combine_transforms(std::vector<Mat3> transforms) {
    Mat3 result = Mat3::identity();
    for (auto tr : transforms) result = mat_mul(tr, result);
@@ -83,6 +82,23 @@ struct Segment {
    Vec2 v;
 
    Segment(Point2 p, Vec2 v) : p(p), v(v) {}
+};
+
+struct Plane {
+   // Ax + By + Cz + D = 0
+   float A, B, C, D;
+
+   Plane(Vec3 pt0, Vec3 pt1, Vec3 pt2) {
+      Vec3 normal = cross_product(pt1 - pt0, pt2 - pt0).normalized();
+      A = normal.x();
+      B = normal.y();
+      C = normal.z();
+      D = -A * pt0.x() + B * pt0.y() + C * pt0.z();
+   }
+
+   Vec3 normal() { return {A, B, C}; }
+
+   void print() { fmt::print("{:+.3f}x {:+.3f}y {:+.3f}z {:+.3f} = 0\n", A, B, C, D); }
 };
 
 } // namespace amath

@@ -463,8 +463,8 @@ struct Mat4 {
       return {cosf(a), sinf(a), 0, 0, -sinf(a), cosf(a), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
    }
 
-   static Mat4 perspective(float fov = PI / 2, float aspect = 1, float zNear = 0,
-                           float zFar = 1000) {
+   static Mat4 perspective(float fov = PI / 2, float aspect = 1, float zNear = 1,
+                           float zFar = 100) {
       return {1.f / (aspect * tanf(fov / 2)),
               0,
               0,
@@ -705,6 +705,12 @@ Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
 Mat4 operator*(const Mat4 &m1, const Mat4 &m2) { return mat_mul(m1, m2); }
 
 // Cross product
+Vec3 cross_product(const Vec3 &v1, const Vec3& v2) {
+   return {Vec3(v1.y() * v2.z() - v1.z() * v2.y(),
+                v1.z() * v2.x() - v1.x() * v2.z(),
+                v1.x() * v2.y() - v1.y() * v2.x())};
+}
+
 Vec4 cross_product(const Vec4 &v1, const Vec4 &v2) {
    return {Vec4(v1.y() * v2.z() - v1.z() * v2.y(),
                 v1.z() * v2.x() - v1.x() * v2.z(),
