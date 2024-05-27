@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cmath>
+#include <math.h>
 #include <random>
 #include <immintrin.h>
 #define FMT_HEADER_ONLY

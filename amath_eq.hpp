@@ -2,9 +2,9 @@
 
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
-#include <cmath>
-#include <amath_core.h>
-#include <amath_utils.h>
+#include <math.h>
+#include <amath_core.hpp>
+#include <amath_utils.hpp>
 
 namespace amath {
 

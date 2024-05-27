@@ -2,12 +2,12 @@
 
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
-#include <cmath>
-#include <cstdio>
+#include <math.h>
+#include <stdio.h>
 #include <vector>
 
-#include <amath_core.h>
-#include <amath_utils.h>
+#include <amath_core.hpp>
+#include <amath_utils.hpp>
 
 namespace amath {
 
@@ -88,17 +88,29 @@ struct Plane {
    // Ax + By + Cz + D = 0
    float A, B, C, D;
 
-   Plane(Vec3 pt0, Vec3 pt1, Vec3 pt2) {
-      Vec3 normal = cross_product(pt1 - pt0, pt2 - pt0).normalized();
+   Plane(Vec3 pt0, Vec3 pt1, Vec3 pt2, bool ccw_winding = false) {
+      Vec3 normal = cross_product(pt2 - pt0, pt1 - pt0).normalized();
+      normal *= (1 - 2 * ccw_winding); // Reverse normal if ccw winding
+
       A = normal.x();
       B = normal.y();
       C = normal.z();
-      D = -A * pt0.x() + B * pt0.y() + C * pt0.z();
+      D = -(A * pt0.x() + B * pt0.y() + C * pt0.z());
    }
 
-   Vec3 normal() { return {A, B, C}; }
+   Vec3 normal() const { return {A, B, C}; }
+
+   float distance_to_point(Vec3 pt) {
+      return fabs(A * pt.x() + B * pt.y() + C * pt.z() + D) / sqrtf(A * A + B * B + C * C);
+   }
+
+   int side_of_point(Vec3 pt) { return A * pt.x() + B * pt.y() + C * pt.z() + D > 0 ? 1 : -1; }
+
+   Vec3 intersection(Segment s) { return plane_segment_intersection(*this, s); }
 
    void print() { fmt::print("{:+.3f}x {:+.3f}y {:+.3f}z {:+.3f} = 0\n", A, B, C, D); }
 };
+
+Vec3 plane_segment_intersection(Plane p, Segment s) {}
 
 } // namespace amath

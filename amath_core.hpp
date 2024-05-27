@@ -1,12 +1,14 @@
 #pragma once
 
-#include <cmath>
-#include <cfloat>
+#include <math.h>
+#include <float.h>
 #include <immintrin.h>
+#include <vector>
+
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
-#include <amath_random.h>
-#include <amath_utils.h>
+#include <amath_random.hpp>
+#include <amath_utils.hpp>
 
 namespace amath {
 
@@ -72,8 +74,12 @@ struct Vec2 {
    }
    Vec2 operator/(const float k) const { return {x() / k, y() / k}; }
 
-   bool operator==(const Vec2 &v) const { return (x() == v.x() && y() == v.y()); }
-   bool operator!=(const Vec2 &v) const { return (x() != v.x() || y() != v.y()); }
+   bool operator==(const Vec2 &v) const {
+      return fabs(x() - v.x()) < FLT_EPSILON && fabs(y() - v.y()) < FLT_EPSILON;
+   }
+   bool operator!=(const Vec2 &v) const {
+      return fabs(x() - v.x()) > FLT_EPSILON || fabs(y() - v.y()) > FLT_EPSILON;
+   }
 
    float operator[](const int i) const { return d[i]; }
    float &operator[](const int i) { return d[i]; }
@@ -88,6 +94,8 @@ struct Vec3 {
    Vec3() : Vec3(0, 0, 0){};
 
    static Vec3 nan() { return {nanf(""), nanf(""), nanf("")}; }
+
+   static Vec3 up() { return {0, 1, 0}; }
 
    float x() const { return d[0]; }
    float y() const { return d[1]; }
@@ -111,6 +119,7 @@ struct Vec3 {
 
    void print() const { fmt::print("Vector3 [{:.4},{:.4}, {:.4}]\n", x(), y(), z()); }
 
+   // Operator overloads
    Vec3 operator-() const { return {-d[0], -d[1], -d[2]}; }
 
    Vec3 operator-(const Vec3 &v) const { return {x() - v.x(), y() - v.y(), z() - v.z()}; }
@@ -140,8 +149,14 @@ struct Vec3 {
    }
    Vec3 operator/(const float k) const { return {x() / k, y() / k, z() / k}; }
 
-   bool operator==(const Vec3 &v) const { return (x() == v.x() && y() == v.y() && z() == v.z()); }
-   bool operator!=(const Vec3 &v) const { return (x() != v.x() || y() != v.y() || z() != v.z()); }
+   bool operator==(const Vec3 &v) const {
+      return fabs(x() - v.x()) < FLT_EPSILON && fabs(y() - v.y()) < FLT_EPSILON &&
+             fabs(z() - v.z()) < FLT_EPSILON;
+   }
+   bool operator!=(const Vec3 &v) const {
+      return fabs(x() - v.x()) > FLT_EPSILON || fabs(y() - v.y()) > FLT_EPSILON ||
+             fabs(z() - v.z()) > FLT_EPSILON;
+   }
 
    float operator[](const int i) const { return d[i]; }
    float &operator[](const int i) { return d[i]; }
@@ -156,6 +171,8 @@ struct Vec4 {
    Vec4() : Vec4(0, 0, 0, 0){};
 
    static Vec4 nan() { return {nanf(""), nanf(""), nanf(""), nanf("")}; }
+
+   static Vec4 up() { return {0, 1, 0, 0}; }
 
    float x() const { return d[0]; }
    float y() const { return d[1]; }
@@ -189,6 +206,7 @@ struct Vec4 {
 
    void print() const { fmt::print("Vector4 [{},{}, {}, {}]\n", x(), y(), z(), w()); }
 
+   // Operator overloads
    Vec4 operator-() const { return {-d[0], -d[1], -d[2], -d[3]}; }
 
    Vec4 operator-(const Vec4 &v) const {
@@ -226,10 +244,12 @@ struct Vec4 {
    Vec4 operator/(const float k) const { return {x() / k, y() / k, z() / k, w() / k}; }
 
    bool operator==(const Vec4 &v) const {
-      return (x() == v.x() && y() == v.y() && z() == v.z() && w() == v.w());
+      return fabs(x() - v.x()) < FLT_EPSILON && fabs(y() - v.y()) < FLT_EPSILON &&
+             fabs(z() - v.z()) < FLT_EPSILON && fabs(w() - v.w()) < FLT_EPSILON;
    }
    bool operator!=(const Vec4 &v) const {
-      return (x() != v.x() || y() != v.y() || z() != v.z() || w() != v.w());
+      return fabs(x() - v.x()) > FLT_EPSILON || fabs(y() - v.y()) > FLT_EPSILON ||
+             fabs(z() - v.z()) > FLT_EPSILON || fabs(w() - v.w()) > FLT_EPSILON;
    }
 
    float operator[](const int i) const { return d[i]; }
@@ -254,6 +274,18 @@ float dot_product(const Vec3 &v1, const Vec3 &v2) {
 }
 float dot_product(const Vec4 &v1, const Vec4 &v2) {
    return v1.x() * v2.x() + v1.y() * v2.y() + v1.z() * v2.z() + v1.w() * v2.w();
+}
+
+bool vec_equal(const Vec2 &v1, const Vec2 &v2, float tolerance = FLT_EPSILON) {
+   return fabs(v1.x() - v2.x()) < tolerance && fabs(v1.y() - v2.y()) < tolerance;
+}
+bool vec_equal(const Vec3 &v1, const Vec3 &v2, float tolerance = FLT_EPSILON) {
+   return fabs(v1.x() - v2.x()) < tolerance && fabs(v1.y() - v2.y()) < tolerance &&
+          fabs(v1.z() - v2.z()) < tolerance;
+}
+bool vec_equal(const Vec4 &v1, const Vec4 &v2, float tolerance = FLT_EPSILON) {
+   return fabs(v1.x() - v2.x()) < tolerance && fabs(v1.y() - v2.y()) < tolerance &&
+          fabs(v1.z() - v2.z()) < tolerance && fabs(v1.w() - v2.w()) < tolerance;
 }
 
 typedef Vec2 Point2;
@@ -348,9 +380,13 @@ struct Mat3 {
       return random_matrix;
    }
 
+   // 2D transformation matrices (for 2D homogeneous coordinate systems)
    static Mat3 scaling(float sx, float sy) { return {sx, 0, 0, 0, sy, 0, 0, 0, 1}; }
    static Mat3 translation(float tx, float ty) { return {1, 0, 0, 0, 1, 0, tx, ty, 1}; }
    static Mat3 rotation(float a) { return {cosf(a), -sinf(a), 0, sinf(a), cosf(a), 0, 0, 0, 1}; }
+
+   // 3D transformation matrices (for 3D euclidean coordinate systems)
+   static Mat3 rotation_around_axis(Vec3 axis, float angle); // 3D rotation around an axis
 
    void print() const {
       fmt::print("3D Matrix\n");
@@ -463,6 +499,12 @@ struct Mat4 {
       return {cosf(a), sinf(a), 0, 0, -sinf(a), cosf(a), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
    }
 
+   static Mat4 rotation(float x, float y, float z);
+
+   static Mat4 rotation_around_axis(Vec4 axis, float angle);
+
+   static Mat4 transform(Vec3 translate = {0, 0, 0}, Vec3 scale = {1, 1, 1}, Vec3 rot = {0, 0, 0});
+
    static Mat4 perspective(float fov = PI / 2, float aspect = 1, float zNear = 1,
                            float zFar = 100) {
       return {1.f / (aspect * tanf(fov / 2)),
@@ -543,7 +585,6 @@ struct Mat4 {
    std::vector<Vec4> transform_points(const std::vector<Vec4> &points) const;
 
    // Operator overloads
-
    float operator[](int i) const { return d[i]; }
    float &operator[](int i) { return d[i]; }
 
@@ -647,6 +688,8 @@ Vec3 mat_mul(const Mat3 &m, const Vec3 &v) {
    };
 }
 
+Vec3 operator*(const Mat3 &m1, const Vec3 &v) { return mat_mul(m1, v); }
+
 Vec4 mat_mul(const Mat4 &m, const Vec4 &v) {
    return {
        dot_product(m.get_row(0), v),
@@ -655,6 +698,7 @@ Vec4 mat_mul(const Mat4 &m, const Vec4 &v) {
        dot_product(m.get_row(3), v),
    };
 }
+Vec4 operator*(const Mat4 &m1, const Vec4 &v) { return mat_mul(m1, v); }
 
 /* Multiply matrix by vector SIMD */
 
@@ -692,6 +736,7 @@ Mat3 mat_mul(const Mat3 &m1, const Mat3 &m2) {
    m3.set_column(2, mat_mul(m1, m2.get_column(2)));
    return m3;
 }
+
 Mat3 operator*(const Mat3 &m1, const Mat3 &m2) { return mat_mul(m1, m2); }
 
 Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
@@ -702,10 +747,17 @@ Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
    m3.set_column(3, mat_mul(m1, m2.get_column(3)));
    return m3;
 }
+
 Mat4 operator*(const Mat4 &m1, const Mat4 &m2) { return mat_mul(m1, m2); }
 
+Mat4 mat_concat(std::vector<Mat4> matrices) {
+   Mat4 r = Mat4::identity();
+   for (size_t i = 0; i < matrices.size(); i++) r = matrices[i] * r;
+   return r;
+}
+
 // Cross product
-Vec3 cross_product(const Vec3 &v1, const Vec3& v2) {
+Vec3 cross_product(const Vec3 &v1, const Vec3 &v2) {
    return {Vec3(v1.y() * v2.z() - v1.z() * v2.y(),
                 v1.z() * v2.x() - v1.x() * v2.z(),
                 v1.x() * v2.y() - v1.y() * v2.x())};
@@ -723,6 +775,112 @@ std::vector<Vec4> Mat4::transform_points(const std::vector<Vec4> &points) const 
    transformed_points.reserve(points.size());
    for (auto p : points) transformed_points.push_back(mat_mul(*this, p));
    return transformed_points;
+}
+
+//
+
+Mat3 Mat3::rotation_around_axis(Vec3 axis, float angle) {
+   if (!axis.is_normalized()) axis = axis.normalized();
+
+   // Sine, cosine and complements of angle
+   float c = cosf(angle);
+   float s = sinf(angle);
+   float c_c = 1 - c;
+   float s_c = 1 - s;
+
+   // Products
+   float x = axis.x();
+   float y = axis.y();
+   float z = axis.z();
+   float xy = x * y;
+   float yz = y * z;
+   float xz = x * z;
+
+   return {c + x * x * c_c,
+           xy * c_c - z * s,
+           xz * c_c + y * s,
+           xy * c_c + z * s,
+           c + y * y * c_c,
+           yz * c_c - x * s,
+           xz * c_c - y * s,
+           yz * c_c + x * s,
+           c + z * z * c_c};
+}
+
+Mat4 Mat4::rotation_around_axis(Vec4 axis, float angle) {
+   if (!axis.is_normalized()) axis = axis.normalized();
+
+   // Sine, cosine and complements of angle
+   float c = cosf(angle);
+   float s = sinf(angle);
+   float c_c = 1 - c;
+   float s_c = 1 - s;
+
+   // Products
+   float x = axis.x();
+   float y = axis.y();
+   float z = axis.z();
+   float xy = x * y;
+   float yz = y * z;
+   float xz = x * z;
+
+   return {
+       c + x * x * c_c,
+       xy * c_c - z * s,
+       xz * c_c + y * s,
+       0,
+       xy * c_c + z * s,
+       c + y * y * c_c,
+       yz * c_c - x * s,
+       0,
+       xz * c_c - y * s,
+       yz * c_c + x * s,
+       c + z * z * c_c,
+       0,
+       0,
+       0,
+       0,
+       1,
+   };
+}
+
+Mat4 Mat4::rotation(float x, float y, float z) {
+
+   return mat_mul(rotationZ(z), mat_mul(rotationY(y), rotationX(x)));
+
+   float cx = cosf(x);
+   float sx = sinf(x);
+   float cy = cosf(y);
+   float sy = sinf(y);
+   float cz = cosf(z);
+   float sz = sinf(z);
+
+   return {
+       cx * cy,
+       cx * sy * sz - sx * cz,
+       cx * sy * cz + sx * sz,
+       0,
+       sx * cy,
+       sx * sy * sz + cx * cz,
+       sx * sy * cz - cx * sz,
+       0,
+       -sy,
+       cy * sz,
+       cy * cz,
+       0,
+       0,
+       0,
+       0,
+       1,
+   };
+}
+
+Mat4 Mat4::transform(Vec3 translate, Vec3 scale, Vec3 rot) {
+
+   Mat4 tr = Mat4::scaling(scale.x(), scale.y(), scale.z());
+   tr = mat_mul(Mat4::rotation(rot.x(), rot.y(), rot.z()), tr);
+   tr = mat_mul(Mat4::translation(translate.x(), translate.y(), translate.z()), tr);
+   return tr;
 }
 
 } // namespace amath

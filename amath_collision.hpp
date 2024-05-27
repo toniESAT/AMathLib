@@ -1,8 +1,8 @@
 #pragma once
 
-#include <amath_core.h>
-#include <amath_geometry.h>
-#include <amath_eq.h>
+#include <amath_core.hpp>
+#include <amath_geometry.hpp>
+#include <amath_eq.hpp>
 #include <vector>
 
 namespace amath {
