@@ -1,0 +1,37 @@
+Standard: Cpp11
+BasedOnStyle: Google
+
+SortIncludes: false
+IndentWidth: 3
+ColumnLimit: 100
+AccessModifierOffset: -4
+NamespaceIndentation: Inner
+
+BinPackArguments: false
+# AllowAllArgumentsOnNextLine: false
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  # AfterEnum: false
+  # AfterStruct: false
+  # AfterClass: false
+  # AfterControlStatement: false
+  # AfterNamespace: false
+  # AfterFunction: false
+  # AfterUnion: false
+  # AfterExternBlock: false
+
+  # BeforeCatch: false
+  # BeforeElse: false
+
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+  SplitEmptyFunction: true
+
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortFunctionsOnASingleLine: All
+AllowShortLambdasOnASingleLine: All
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
