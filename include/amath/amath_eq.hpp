@@ -1,7 +1,5 @@
 #pragma once
 
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
 #include <math.h>
 #include <amath_core.hpp>
 #include <amath_utils.hpp>
@@ -47,30 +45,30 @@ struct EqSystem2 {
    };
 
    void print() {
-      fmt::print("2D linear equation system:\n");
+      printf("2D linear equation system:\n");
 
       for (int i = 0; i < 2; i++)
-         fmt::print("\tEq {:d}: {:+.3f} * x {:+.3f} * y = {:+.3f}\n",
+         printf("\tEq %d: %+.3f * x %+.3f * y = %+.3f\n",
                     i + 1,
                     coef[i + 2 * 0],
                     coef[i + 2 * 1],
                     constants[i]);
 
-      fmt::print("Solution: ");
+      printf("Solution: ");
       switch (solution.type) {
       case EqType::kIndependent:
-         fmt::print("x = {:+.3f}, y = {:+.3f}:\n", solution.values.x(), solution.values.y());
+         printf("x = %+.3f, y = %+.3f:\n", solution.values.x(), solution.values.y());
          break;
       case EqType::kNotIndependent:
-         fmt::print("System is not independent, no solution was calculated.");
+         printf("System is not independent, no solution was calculated.");
          break;
       case EqType::kDependent:
-         fmt::print("Dependent system, an example solution is: x = {:+.3f}, y = {:+.3f}:\n",
+         printf("Dependent system, an example solution is: x = %+.3f, y = %+.3f:\n",
                     solution.values.x(),
                     solution.values.y());
          break;
-      case EqType::kInconsistent: fmt::print("Inconsistent system, has no solutions\n"); break;
-      case EqType::kUnsolved: fmt::print("Unsolved\n"); break;
+      case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
+      case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
 
@@ -143,29 +141,29 @@ struct EqSystem3 {
    };
 
    void print() {
-      fmt::print("3D linear equation system:\n");
+      printf("3D linear equation system:\n");
 
       for (int i = 0; i < 3; i++)
-         fmt::print("\tEq {:d}: {:+.3f} * x {:+.3f} * y {:+.3f} * z = {:+.3f}\n",
+         printf("\tEq %d: %+.3f * x %+.3f * y %+.3f * z = %+.3f\n",
                     i + 1,
                     coef[i + 3 * 0],
                     coef[i + 3 * 1],
                     coef[i + 3 * 2],
                     constants[i]);
-      fmt::print("Solution: ");
+      printf("Solution: ");
       switch (solution.type) {
       case EqType::kIndependent:
-         fmt::print("x = {:+.3f}, y = {:+.3f}, z = {:+.3f}\n",
+         printf("x = %+.3f, y = %+.3f, z = %+.3f\n",
                     solution.values.x(),
                     solution.values.y(),
                     solution.values.z());
          break;
       case EqType::kNotIndependent:
-         fmt::print("System is not independent, no solution was calculated.");
+         printf("System is not independent, no solution was calculated.");
          break;
-      case EqType::kDependent: fmt::print("Dependent system, infinite solutions\n"); break;
-      case EqType::kInconsistent: fmt::print("Inconsistent system, has no solutions\n"); break;
-      case EqType::kUnsolved: fmt::print("Unsolved\n"); break;
+      case EqType::kDependent: printf("Dependent system, infinite solutions\n"); break;
+      case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
+      case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
    // CAUTION: return by reference
@@ -250,31 +248,31 @@ struct EqSystem4 {
    };
 
    void print() {
-      fmt::print("4D linear equation system:\n");
+      printf("4D linear equation system:\n");
 
       for (int i = 0; i < 4; i++)
-         fmt::print("\tEq {:d}: {:+.3f} * x {:+.3f} * y {:+.3f} * z {:+.3f} * w = {:+.3f}\n",
+         printf("\tEq %d: %+.3f * x %+.3f * y %+.3f * z %+.3f * w = %+.3f\n",
                     i + 1,
                     coef[i + 4 * 0],
                     coef[i + 4 * 1],
                     coef[i + 4 * 2],
                     coef[i + 4 * 3],
                     constants[i]);
-      fmt::print("Solution: ");
+      printf("Solution: ");
       switch (solution.type) {
       case EqType::kIndependent:
-         fmt::print("x = {:+.3f}, y = {:+.3f}, z = {:+.3f},  w = {:+.3f}\n",
+         printf("x = %+.3f, y = %+.3f, z = %+.3f,  w = %+.3f\n",
                     solution.values.x(),
                     solution.values.y(),
                     solution.values.z(),
                     solution.values.w());
          break;
       case EqType::kNotIndependent:
-         fmt::print("System is not independent, no solution was calculated.");
+         printf("System is not independent, no solution was calculated.");
          break;
-      case EqType::kDependent: fmt::print("Dependent system, infinite solutions\n"); break;
-      case EqType::kInconsistent: fmt::print("Inconsistent system, has no solutions\n"); break;
-      case EqType::kUnsolved: fmt::print("Unsolved\n"); break;
+      case EqType::kDependent: printf("Dependent system, infinite solutions\n"); break;
+      case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
+      case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
    // CAUTION: return by reference

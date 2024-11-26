@@ -5,8 +5,6 @@
 #include <immintrin.h>
 #include <vector>
 
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
 #include <amath_random.hpp>
 #include <amath_utils.hpp>
 
@@ -17,12 +15,11 @@ namespace amath {
 /********************************/
 
 struct Vec2 {
-
    float d[2];
 
    Vec2(float v0, float v1) : d{v0, v1} {};
    Vec2(float v) : d{v, v} {};
-   Vec2() : Vec2(0, 0){};
+   Vec2() : Vec2(0, 0) {};
 
    float x() const { return d[0]; }
    float y() const { return d[1]; }
@@ -46,7 +43,7 @@ struct Vec2 {
 
    Vec2 perpendicular() const { return {-y(), x()}; }
 
-   void print() const { fmt::print("Vector2 [{},{}]\n", x(), y()); }
+   void print() const { printf("Vector2 [%.4f, %.4f]\n", x(), y()); }
 
    Vec2 operator-() const { return {-d[0], -d[1]}; }
 
@@ -86,12 +83,11 @@ struct Vec2 {
 };
 
 struct Vec3 {
-
    float d[3];
 
    Vec3(float v0, float v1, float v2) : d{v0, v1, v2} {};
    Vec3(float v) : d{v, v, v} {};
-   Vec3() : Vec3(0, 0, 0){};
+   Vec3() : Vec3(0, 0, 0) {};
 
    static Vec3 nan() { return {nanf(""), nanf(""), nanf("")}; }
 
@@ -117,7 +113,7 @@ struct Vec3 {
       return is_almost_zero(squared_length() - 1, tolerance);
    }
 
-   void print() const { fmt::print("Vector3 [{:.4},{:.4}, {:.4}]\n", x(), y(), z()); }
+   void print() const { printf("Vector3 [%.4f,%.4f, %.4f]\n", x(), y(), z()); }
 
    // Operator overloads
    Vec3 operator-() const { return {-d[0], -d[1], -d[2]}; }
@@ -163,12 +159,11 @@ struct Vec3 {
 };
 
 struct Vec4 {
-
    float d[4];
 
    Vec4(float v0, float v1, float v2, float v3) : d{v0, v1, v2, v3} {};
    Vec4(float v) : d{v, v, v, v} {};
-   Vec4() : Vec4(0, 0, 0, 0){};
+   Vec4() : Vec4(0, 0, 0, 0) {};
 
    static Vec4 nan() { return {nanf(""), nanf(""), nanf(""), nanf("")}; }
 
@@ -204,7 +199,7 @@ struct Vec4 {
       return is_almost_zero(squared_length() - 1, tolerance);
    }
 
-   void print() const { fmt::print("Vector4 [{},{}, {}, {}]\n", x(), y(), z(), w()); }
+   void print() const { printf("Vector4 [%.4f, %.4f, %.4f, %.4f]\n", x(), y(), z(), w()); }
 
    // Operator overloads
    Vec4 operator-() const { return {-d[0], -d[1], -d[2], -d[3]}; }
@@ -310,13 +305,13 @@ struct Mat2 {
    static Mat2 identity() { return {1, 0, 0, 1}; }
    static Mat2 nan() { return Mat2(nanf("")); }
    static Mat2 random() {
-      static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
+      static RandomFloatUniform rng(0.f, 1.f);  // Initialize only once for performance
       return {rng.generate(), rng.generate(), rng.generate(), rng.generate()};
    }
 
-   void print() const { fmt::print("2D Matrix\n[{}][{}]\n[{}][{}]", d[0], d[2], d[1], d[3]); }
+   void print() const { printf("2D Matrix\n[%.4f][%.4f]\n[%.4f][%.4f]", d[0], d[2], d[1], d[3]); }
 
-   float determinant() const { return d[0] * d[3] - d[1] * d[2]; } // By Sarrus' rule
+   float determinant() const { return d[0] * d[3] - d[1] * d[2]; }  // By Sarrus' rule
 
    Vec2 get_column(const int j) const { return {d[2 * j], d[2 * j + 1]}; }
    Vec2 get_row(const int i) const { return {d[i], d[i + 2]}; }
@@ -374,7 +369,7 @@ struct Mat3 {
    static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
    static Mat3 nan() { return Mat3(nanf("")); };
    static Mat3 random() {
-      static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
+      static RandomFloatUniform rng(0.f, 1.f);  // Initialize only once for performance
       Mat3 random_matrix;
       for (int i = 0; i < random_matrix.size(); i++) random_matrix.d[i] = rng.generate();
       return random_matrix;
@@ -386,15 +381,15 @@ struct Mat3 {
    static Mat3 rotation(float a) { return {cosf(a), -sinf(a), 0, sinf(a), cosf(a), 0, 0, 0, 1}; }
 
    // 3D transformation matrices (for 3D euclidean coordinate systems)
-   static Mat3 rotation_around_axis(Vec3 axis, float angle); // 3D rotation around an axis
+   static Mat3 rotation_around_axis(Vec3 axis, float angle);  // 3D rotation around an axis
 
    void print() const {
-      fmt::print("3D Matrix\n");
+      printf("3D Matrix\n");
       for (int i = 0; i < 3; i++)
-         fmt::print("[{:.4f}][{:.4f}][{:.4f}]\n", d[3 * i], d[3 * i + 1], d[3 * i + 2]);
+         printf("[%.4f][%.4f][%.4f]\n", d[3 * i], d[3 * i + 1], d[3 * i + 2]);
    }
 
-   float determinant() { // By Sarrus' rule
+   float determinant() {  // By Sarrus' rule
       return d[0] * d[4] * d[8] + d[2] * d[3] * d[7] + d[1] * d[5] * d[6] - d[2] * d[4] * d[6] -
              d[1] * d[3] * d[8] - d[0] * d[5] * d[7];
    }
@@ -418,15 +413,15 @@ struct Mat3 {
    float operator()(size_t i, size_t j) const {
       if (i < 3 && j < 3) return d[i * 3 + j];
       else {
-         fmt::print("ERROR at Mat3(): Wrong row or column index.\n");
+         printf("ERROR at Mat3(): Wrong row or column index.\n");
          return nanf("");
       }
    }
    float &operator()(size_t i, size_t j) {
       if (i > 3 || j < 3) return d[i * 3 + j];
       else {
-         fmt::print("ERROR at Mat3(): Wrong row or column index.\n");
-         exit(1); // ! should this throw?
+         printf("ERROR at Mat3(): Wrong row or column index.\n");
+         exit(1);  // ! should this throw?
       }
    }
 
@@ -526,23 +521,23 @@ struct Mat4 {
    }
 
    static Mat4 random() {
-      static RandomFloatUniform rng(0.f, 1.f); // Initialize only once for performance
+      static RandomFloatUniform rng(0.f, 1.f);  // Initialize only once for performance
       Mat4 random_matrix;
       for (int i = 0; i < random_matrix.size(); i++) random_matrix.d[i] = rng.generate();
       return random_matrix;
    }
 
    void print() const {
-      fmt::print("4D Matrix\n");
+      printf("4D Matrix\n");
       for (int i = 0; i < 4; i++)
-         fmt::print("[{}][{}][{}][{}]\n", d[4 * 0 + i], d[4 * 1 + i], d[4 * 2 + i], d[4 * 3 + i]);
-      fmt::print("\n");
+         printf("[%.4f][%.4f][%.4f][%.4f]\n", d[4 * 0 + i], d[4 * 1 + i], d[4 * 2 + i], d[4 * 3 + i]);
+      printf("\n");
    }
 
    Mat3 get_adjugate(size_t row, size_t col) const {
       Mat3 adj = Mat3::nan();
       if (col > 3 || row > 3) {
-         fmt::print("ERROR at Mat3::get_adjugate: Wrong column or row index");
+         printf("ERROR at Mat3::get_adjugate: Wrong column or row index");
          return adj;
       };
 
@@ -554,7 +549,6 @@ struct Mat4 {
    }
 
    float determinant() const {
-
       Vec4 sign(1, -1, 1, -1);
       Mat3 adj;
       float det = 0;
@@ -845,7 +839,6 @@ Mat4 Mat4::rotation_around_axis(Vec4 axis, float angle) {
 }
 
 Mat4 Mat4::rotation(float x, float y, float z) {
-
    return mat_mul(rotationZ(z), mat_mul(rotationY(y), rotationX(x)));
 
    float cx = cosf(x);
@@ -876,11 +869,10 @@ Mat4 Mat4::rotation(float x, float y, float z) {
 }
 
 Mat4 Mat4::transform(Vec3 translate, Vec3 scale, Vec3 rot) {
-
    Mat4 tr = Mat4::scaling(scale.x(), scale.y(), scale.z());
    tr = mat_mul(Mat4::rotation(rot.x(), rot.y(), rot.z()), tr);
    tr = mat_mul(Mat4::translation(translate.x(), translate.y(), translate.z()), tr);
    return tr;
 }
 
-} // namespace amath
+}  // namespace amath

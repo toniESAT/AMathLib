@@ -1,7 +1,5 @@
 #pragma once
 
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
 #include <math.h>
 #include <stdio.h>
 #include <vector>
@@ -39,8 +37,12 @@ struct RegularPolygon {
 
    RegularPolygon(Vec2 center, int num_vertex, float scale, float rotation = 0, bool star = false,
                   float star_ratio = 0.5f)
-       : center(center), num_vertex(num_vertex), scale(scale), rotation(rotation), star(star),
-         star_ratio(star_ratio){};
+       : center(center),
+         num_vertex(num_vertex),
+         scale(scale),
+         rotation(rotation),
+         star(star),
+         star_ratio(star_ratio) {};
 
    std::vector<float> make_path() {
       num_vertex = star ? num_vertex * 2 : num_vertex;
@@ -67,13 +69,14 @@ struct RegularPolygon {
    }
 
    void print() {
-      fmt::print("Shape:\n- Center: {{}, {}}\n"
-                 "- Scale: {}\n"
-                 "- Rotation: {}\n",
-                 center.x(),
-                 center.y(),
-                 scale,
-                 rotation);
+      printf(
+          "Shape:\n- Center: {%.4f, %.4f}\n"
+          "- Scale: %.4f\n"
+          "- Rotation: %.4f}\n",
+          center.x(),
+          center.y(),
+          scale,
+          rotation);
    }
 };
 
@@ -90,7 +93,7 @@ struct Plane {
 
    Plane(Vec3 pt0, Vec3 pt1, Vec3 pt2, bool ccw_winding = false) {
       Vec3 normal = cross_product(pt2 - pt0, pt1 - pt0).normalized();
-      normal *= (1 - 2 * ccw_winding); // Reverse normal if ccw winding
+      normal *= (1 - 2 * ccw_winding);  // Reverse normal if ccw winding
 
       A = normal.x();
       B = normal.y();
@@ -108,9 +111,9 @@ struct Plane {
 
    Vec3 intersection(Segment s) { return plane_segment_intersection(*this, s); }
 
-   void print() { fmt::print("{:+.3f}x {:+.3f}y {:+.3f}z {:+.3f} = 0\n", A, B, C, D); }
+   void print() { printf("%+.4fx %+.4fy %+.4fz %+.4f = 0\n", A, B, C, D); }
 };
 
 Vec3 plane_segment_intersection(Plane p, Segment s) {}
 
-} // namespace amath
+}  // namespace amath

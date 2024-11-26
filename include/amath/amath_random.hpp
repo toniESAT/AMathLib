@@ -3,8 +3,6 @@
 #include <math.h>
 #include <random>
 #include <immintrin.h>
-#define FMT_HEADER_ONLY
-#include "fmt/format.h"
 
 namespace amath {
 
