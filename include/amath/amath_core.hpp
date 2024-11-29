@@ -5,8 +5,8 @@
 #include <immintrin.h>
 #include <vector>
 
-#include <amath_random.hpp>
-#include <amath_utils.hpp>
+#include "amath_utils.hpp"
+
 
 namespace amath {
 
@@ -45,13 +45,32 @@ struct Vec2 {
 
    void print() const { printf("Vector2 [%.4f, %.4f]\n", x(), y()); }
 
+   /*****************************
+    *  Vec2 operator overloads  *
+    *****************************/
+
+   // Negate
    Vec2 operator-() const { return {-d[0], -d[1]}; }
 
-   Vec2 operator+(const Vec2 &v) const { return {x() + v.x(), y() + v.y()}; }
-   Vec2 operator-(const Vec2 &v) const { return {x() - v.x(), y() - v.y()}; }
+   // Operations with scalars
    Vec2 operator+(const float k) const { return {x() + k, y() + k}; }
    Vec2 operator-(const float k) const { return {x() - k, y() - k}; }
+   Vec2 operator*(const float k) const { return {x() * k, y() * k}; }
+   Vec2 &operator*=(const float k) {
+      d[0] *= k;
+      d[1] *= k;
+      return *this;
+   }
+   Vec2 operator/(const float k) const { return {x() / k, y() / k}; }
+   Vec2 &operator/=(const float k) {
+      d[0] /= k;
+      d[1] /= k;
+      return *this;
+   }
 
+   // Operations with vectors
+   Vec2 operator+(const Vec2 &v) const { return {x() + v.x(), y() + v.y()}; }
+   Vec2 operator-(const Vec2 &v) const { return {x() - v.x(), y() - v.y()}; }
    Vec2 &operator+=(Vec2 &v) {
       x() = x() + v.x();
       y() = y() + v.y();
@@ -63,14 +82,7 @@ struct Vec2 {
       return (*this);
    }
 
-   Vec2 operator*(const float k) const { return {x() * k, y() * k}; }
-   Vec2 &operator*=(const float k) {
-      d[0] *= k;
-      d[1] *= k;
-      return *this;
-   }
-   Vec2 operator/(const float k) const { return {x() / k, y() / k}; }
-
+   // Comparison
    bool operator==(const Vec2 &v) const {
       return fabs(x() - v.x()) < FLT_EPSILON && fabs(y() - v.y()) < FLT_EPSILON;
    }
@@ -78,6 +90,7 @@ struct Vec2 {
       return fabs(x() - v.x()) > FLT_EPSILON || fabs(y() - v.y()) > FLT_EPSILON;
    }
 
+   // Access
    float operator[](const int i) const { return d[i]; }
    float &operator[](const int i) { return d[i]; }
 };
@@ -115,14 +128,33 @@ struct Vec3 {
 
    void print() const { printf("Vector3 [%.4f,%.4f, %.4f]\n", x(), y(), z()); }
 
-   // Operator overloads
+   /*****************************
+    *  Vec3 operator overloads  *
+    *****************************/
+   // Negate
    Vec3 operator-() const { return {-d[0], -d[1], -d[2]}; }
 
-   Vec3 operator-(const Vec3 &v) const { return {x() - v.x(), y() - v.y(), z() - v.z()}; }
-   Vec3 operator+(const Vec3 &v) const { return {x() + v.x(), y() + v.y(), z() + v.z()}; }
+   // Operations with scalars
    Vec3 operator+(const float k) const { return {x() + k, y() + k, z() + k}; }
    Vec3 operator-(const float k) const { return {x() - k, y() - k, z() - k}; }
+   Vec3 operator*(const float k) const { return {x() * k, y() * k, z() * k}; }
+   Vec3 &operator*=(const float k) {
+      d[0] *= k;
+      d[1] *= k;
+      d[2] *= k;
+      return *this;
+   }
+   Vec3 operator/(const float k) const { return {x() / k, y() / k, z() / k}; }
+   Vec3 &operator/=(const float k) {
+      d[0] /= k;
+      d[1] /= k;
+      d[2] /= k;
+      return *this;
+   }
 
+   // Operations with vectors
+   Vec3 operator+(const Vec3 &v) const { return {x() + v.x(), y() + v.y(), z() + v.z()}; }
+   Vec3 operator-(const Vec3 &v) const { return {x() - v.x(), y() - v.y(), z() - v.z()}; }
    Vec3 &operator+=(Vec3 &v) {
       x() = x() + v.x();
       y() = y() + v.y();
@@ -136,15 +168,7 @@ struct Vec3 {
       return (*this);
    }
 
-   Vec3 operator*(const float k) const { return {x() * k, y() * k, z() * k}; }
-   Vec3 &operator*=(const float k) {
-      d[0] *= k;
-      d[1] *= k;
-      d[2] *= k;
-      return *this;
-   }
-   Vec3 operator/(const float k) const { return {x() / k, y() / k, z() / k}; }
-
+   // Comparison
    bool operator==(const Vec3 &v) const {
       return fabs(x() - v.x()) < FLT_EPSILON && fabs(y() - v.y()) < FLT_EPSILON &&
              fabs(z() - v.z()) < FLT_EPSILON;
@@ -154,6 +178,7 @@ struct Vec3 {
              fabs(z() - v.z()) > FLT_EPSILON;
    }
 
+   // Access
    float operator[](const int i) const { return d[i]; }
    float &operator[](const int i) { return d[i]; }
 };
@@ -166,7 +191,6 @@ struct Vec4 {
    Vec4() : Vec4(0, 0, 0, 0) {};
 
    static Vec4 nan() { return {nanf(""), nanf(""), nanf(""), nanf("")}; }
-
    static Vec4 up() { return {0, 1, 0, 0}; }
 
    float x() const { return d[0]; }
@@ -201,18 +225,43 @@ struct Vec4 {
 
    void print() const { printf("Vector4 [%.4f, %.4f, %.4f, %.4f]\n", x(), y(), z(), w()); }
 
-   // Operator overloads
+   float dot_product(const Vec4 &v2) {
+      return v1.x() * v2.x() + v1.y() * v2.y() + v1.z() * v2.z() + v1.w() * v2.w();
+   }
+
+   /*****************************
+    *  Vec4 operator overloads  *
+    *****************************/
+   // Negate
    Vec4 operator-() const { return {-d[0], -d[1], -d[2], -d[3]}; }
 
+   // Operations with scalars
+   Vec4 operator+(const float k) const { return {x() + k, y() + k, z() + k, w() + k}; }
+   Vec4 operator-(const float k) const { return {x() - k, y() - k, z() - k, w() - k}; }
+   Vec4 operator*(const float k) const { return {x() * k, y() * k, z() * k, w() * k}; }
+   Vec4 &operator*=(const float k) {
+      d[0] *= k;
+      d[1] *= k;
+      d[2] *= k;
+      d[3] *= k;
+      return *this;
+   }
+   Vec4 operator/(const float k) const { return {x() / k, y() / k, z() / k, w() / k}; }
+   Vec4 &operator/=(const float k) {
+      d[0] /= k;
+      d[1] /= k;
+      d[2] /= k;
+      d[3] /= k;
+      return *this;
+   }
+
+   // Operations with vectors
    Vec4 operator-(const Vec4 &v) const {
       return {x() - v.x(), y() - v.y(), z() - v.z(), w() - v.w()};
    }
    Vec4 operator+(const Vec4 &v) const {
       return {x() + v.x(), y() + v.y(), z() + v.z(), w() + v.w()};
    }
-   Vec4 operator+(const float k) const { return {x() + k, y() + k, z() + k, w() + k}; }
-   Vec4 operator-(const float k) const { return {x() - k, y() - k, z() - k, w() - k}; }
-
    Vec4 &operator+=(Vec4 &v) {
       x() += v.x();
       y() += v.y();
@@ -228,16 +277,7 @@ struct Vec4 {
       return (*this);
    }
 
-   Vec4 operator*(const float k) const { return {x() * k, y() * k, z() * k, w() * k}; }
-   Vec4 &operator*=(const float k) {
-      d[0] *= k;
-      d[1] *= k;
-      d[2] *= k;
-      d[3] *= k;
-      return *this;
-   }
-   Vec4 operator/(const float k) const { return {x() / k, y() / k, z() / k, w() / k}; }
-
+   // Comparison
    bool operator==(const Vec4 &v) const {
       return fabs(x() - v.x()) < FLT_EPSILON && fabs(y() - v.y()) < FLT_EPSILON &&
              fabs(z() - v.z()) < FLT_EPSILON && fabs(w() - v.w()) < FLT_EPSILON;
@@ -247,44 +287,17 @@ struct Vec4 {
              fabs(z() - v.z()) > FLT_EPSILON || fabs(w() - v.w()) > FLT_EPSILON;
    }
 
+   // Access
    float operator[](const int i) const { return d[i]; }
    float &operator[](const int i) { return d[i]; }
 };
 
-Vec2 vec_add(const Vec2 &v1, const Vec2 &v2) { return {v1.x() + v2.x(), v1.y() + v2.y()}; }
-Vec3 vec_add(const Vec3 &v1, const Vec3 &v2) {
-   return {v1.x() + v2.x(), v1.y() + v2.y(), v1.z() + v2.z()};
+inline float dot_product(const Vec2 &v1, const Vec2 &v2) {
+   return v1.x() * v2.x() + v1.y() * v2.y();
 }
-Vec4 vec_add(const Vec4 &v1, const Vec4 &v2) {
-   return {v1.x() + v2.x(), v1.y() + v2.y(), v1.z() + v2.z(), v1.w() + v2.w()};
-}
-
-Vec2 vec_mul(const Vec2 &v, float k) { return {v.x() * k, v.y() * k}; }
-Vec3 vec_mul(const Vec3 &v, float k) { return {v.x() * k, v.y() * k, v.z() * k}; }
-Vec4 vec_mul(const Vec4 &v, float k) { return {v.x() * k, v.y() * k, v.z() * k, v.w() * k}; }
-
-float dot_product(const Vec2 &v1, const Vec2 &v2) { return v1.x() * v2.x() + v1.y() * v2.y(); }
-float dot_product(const Vec3 &v1, const Vec3 &v2) {
+inline float dot_product(const Vec3 &v1, const Vec3 &v2) {
    return v1.x() * v2.x() + v1.y() * v2.y() + v1.z() * v2.z();
 }
-float dot_product(const Vec4 &v1, const Vec4 &v2) {
-   return v1.x() * v2.x() + v1.y() * v2.y() + v1.z() * v2.z() + v1.w() * v2.w();
-}
-
-bool vec_equal(const Vec2 &v1, const Vec2 &v2, float tolerance = FLT_EPSILON) {
-   return fabs(v1.x() - v2.x()) < tolerance && fabs(v1.y() - v2.y()) < tolerance;
-}
-bool vec_equal(const Vec3 &v1, const Vec3 &v2, float tolerance = FLT_EPSILON) {
-   return fabs(v1.x() - v2.x()) < tolerance && fabs(v1.y() - v2.y()) < tolerance &&
-          fabs(v1.z() - v2.z()) < tolerance;
-}
-bool vec_equal(const Vec4 &v1, const Vec4 &v2, float tolerance = FLT_EPSILON) {
-   return fabs(v1.x() - v2.x()) < tolerance && fabs(v1.y() - v2.y()) < tolerance &&
-          fabs(v1.z() - v2.z()) < tolerance && fabs(v1.w() - v2.w()) < tolerance;
-}
-
-typedef Vec2 Point2;
-typedef Vec3 Point3;
 
 /********************************/
 /****        MATRICES        ****/
@@ -304,10 +317,6 @@ struct Mat2 {
    static int size() { return 4; }
    static Mat2 identity() { return {1, 0, 0, 1}; }
    static Mat2 nan() { return Mat2(nanf("")); }
-   static Mat2 random() {
-      static RandomFloatUniform rng(0.f, 1.f);  // Initialize only once for performance
-      return {rng.generate(), rng.generate(), rng.generate(), rng.generate()};
-   }
 
    void print() const { printf("2D Matrix\n[%.4f][%.4f]\n[%.4f][%.4f]", d[0], d[2], d[1], d[3]); }
 
@@ -342,6 +351,7 @@ struct Mat2 {
    }
 
    Mat2 operator*(const float k) const { return {d[0] * k, d[1] * k, d[2] * k, d[3] * k}; }
+   Mat2 operator*(const Mat2 &m);
    Mat2 &operator*=(const float k) {
       d[0] *= k;
       d[1] *= k;
@@ -368,12 +378,6 @@ struct Mat3 {
    static int size() { return 9; }
    static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
    static Mat3 nan() { return Mat3(nanf("")); };
-   static Mat3 random() {
-      static RandomFloatUniform rng(0.f, 1.f);  // Initialize only once for performance
-      Mat3 random_matrix;
-      for (int i = 0; i < random_matrix.size(); i++) random_matrix.d[i] = rng.generate();
-      return random_matrix;
-   }
 
    // 2D transformation matrices (for 2D homogeneous coordinate systems)
    static Mat3 scaling(float sx, float sy) { return {sx, 0, 0, 0, sy, 0, 0, 0, 1}; }
@@ -381,7 +385,33 @@ struct Mat3 {
    static Mat3 rotation(float a) { return {cosf(a), -sinf(a), 0, sinf(a), cosf(a), 0, 0, 0, 1}; }
 
    // 3D transformation matrices (for 3D euclidean coordinate systems)
-   static Mat3 rotation_around_axis(Vec3 axis, float angle);  // 3D rotation around an axis
+   static Mat3 rotation_around_axis(Vec3 axis, float angle) {
+      if (!axis.is_normalized()) axis = axis.normalized();
+
+      // Sine, cosine and complements of angle
+      float c = cosf(angle);
+      float s = sinf(angle);
+      float c_c = 1 - c;
+      float s_c = 1 - s;
+
+      // Products
+      float x = axis.x();
+      float y = axis.y();
+      float z = axis.z();
+      float xy = x * y;
+      float yz = y * z;
+      float xz = x * z;
+
+      return {c + x * x * c_c,
+              xy * c_c - z * s,
+              xz * c_c + y * s,
+              xy * c_c + z * s,
+              c + y * y * c_c,
+              yz * c_c - x * s,
+              xz * c_c - y * s,
+              yz * c_c + x * s,
+              c + z * z * c_c};
+   }
 
    void print() const {
       printf("3D Matrix\n");
@@ -452,6 +482,10 @@ struct Mat3 {
       return {
           d[0] * k, d[1] * k, d[2] * k, d[3] * k, d[4] * k, d[5] * k, d[6] * k, d[7] * k, d[8] * k};
    }
+
+   Mat3 operator*(const Mat3 &m);
+   Vec3 operator*(const Vec3 &v);
+
    Mat3 &operator*=(float k) {
       for (int i = 0; i < this->size(); i++) d[i] *= k;
       return *this;
@@ -496,7 +530,42 @@ struct Mat4 {
 
    static Mat4 rotation(float x, float y, float z);
 
-   static Mat4 rotation_around_axis(Vec4 axis, float angle);
+   static Mat4 rotation_around_axis(Vec4 axis, float angle) {
+      if (!axis.is_normalized()) axis = axis.normalized();
+
+      // Sine, cosine and complements of angle
+      float c = cosf(angle);
+      float s = sinf(angle);
+      float c_c = 1 - c;
+      float s_c = 1 - s;
+
+      // Products
+      float x = axis.x();
+      float y = axis.y();
+      float z = axis.z();
+      float xy = x * y;
+      float yz = y * z;
+      float xz = x * z;
+
+      return {
+          c + x * x * c_c,
+          xy * c_c - z * s,
+          xz * c_c + y * s,
+          0,
+          xy * c_c + z * s,
+          c + y * y * c_c,
+          yz * c_c - x * s,
+          0,
+          xz * c_c - y * s,
+          yz * c_c + x * s,
+          c + z * z * c_c,
+          0,
+          0,
+          0,
+          0,
+          1,
+      };
+   }
 
    static Mat4 transform(Vec3 translate = {0, 0, 0}, Vec3 scale = {1, 1, 1}, Vec3 rot = {0, 0, 0});
 
@@ -520,17 +589,11 @@ struct Mat4 {
               0};
    }
 
-   static Mat4 random() {
-      static RandomFloatUniform rng(0.f, 1.f);  // Initialize only once for performance
-      Mat4 random_matrix;
-      for (int i = 0; i < random_matrix.size(); i++) random_matrix.d[i] = rng.generate();
-      return random_matrix;
-   }
-
    void print() const {
       printf("4D Matrix\n");
       for (int i = 0; i < 4; i++)
-         printf("[%.4f][%.4f][%.4f][%.4f]\n", d[4 * 0 + i], d[4 * 1 + i], d[4 * 2 + i], d[4 * 3 + i]);
+         printf(
+             "[%.4f][%.4f][%.4f][%.4f]\n", d[4 * 0 + i], d[4 * 1 + i], d[4 * 2 + i], d[4 * 3 + i]);
       printf("\n");
    }
 
@@ -644,6 +707,8 @@ struct Mat4 {
               d[14] * k,
               d[15] * k};
    }
+   Mat4 operator*(const Mat4 &m);
+   Vec4 operator*(const Vec4 &v);
    Mat4 &operator*=(float k) {
       for (int i = 0; i < this->size(); i++) d[i] *= k;
       return *this;
@@ -652,29 +717,29 @@ struct Mat4 {
 };
 
 /* Add matrices */
-Mat2 mat_add(const Mat2 &m1, const Mat2 &m2) { return m1 + m2; }
-Mat3 mat_add(const Mat3 &m1, const Mat3 &m2) { return m1 + m2; }
-Mat4 mat_add(const Mat4 &m1, const Mat4 &m2) { return m1 + m2; }
+inline Mat2 mat_add(const Mat2 &m1, const Mat2 &m2) { return m1 + m2; }
+inline Mat3 mat_add(const Mat3 &m1, const Mat3 &m2) { return m1 + m2; }
+inline Mat4 mat_add(const Mat4 &m1, const Mat4 &m2) { return m1 + m2; }
 
 /* Subtract matrices */
-Mat2 mat_sub(const Mat2 &m1, const Mat2 &m2) { return m1 - m2; }
-Mat3 mat_sub(const Mat3 &m1, const Mat3 &m2) { return m1 - m2; }
-Mat4 mat_sub(const Mat4 &m1, const Mat4 &m2) { return m1 - m2; }
+inline Mat2 mat_sub(const Mat2 &m1, const Mat2 &m2) { return m1 - m2; }
+inline Mat3 mat_sub(const Mat3 &m1, const Mat3 &m2) { return m1 - m2; }
+inline Mat4 mat_sub(const Mat4 &m1, const Mat4 &m2) { return m1 - m2; }
 
 /* Multiply matrix by constant */
-Mat2 mat_mul(const Mat2 &m1, float k) { return m1 * k; }
-Mat3 mat_mul(const Mat3 &m1, float k) { return m1 * k; }
-Mat4 mat_mul(const Mat4 &m1, float k) { return m1 * k; }
+inline Mat2 mat_mul(const Mat2 &m1, float k) { return m1 * k; }
+inline Mat3 mat_mul(const Mat3 &m1, float k) { return m1 * k; }
+inline Mat4 mat_mul(const Mat4 &m1, float k) { return m1 * k; }
 
 /* Multiply matrix by vector */
-Vec2 mat_mul(const Mat2 &m, const Vec2 &v) {
+inline Vec2 mat_mul(const Mat2 &m, const Vec2 &v) {
    // return {m[0] * v[0] + m[2] * v[1], m[1] * v[0] + m[3] * v[1]};
    return {
        dot_product(m.get_row(0), v),
        dot_product(m.get_row(1), v),
    };
 }
-Vec3 mat_mul(const Mat3 &m, const Vec3 &v) {
+inline Vec3 mat_mul(const Mat3 &m, const Vec3 &v) {
    return {
        dot_product(m.get_row(0), v),
        dot_product(m.get_row(1), v),
@@ -682,9 +747,9 @@ Vec3 mat_mul(const Mat3 &m, const Vec3 &v) {
    };
 }
 
-Vec3 operator*(const Mat3 &m1, const Vec3 &v) { return mat_mul(m1, v); }
+inline Vec3 Mat3::operator*(const Vec3 &v) { return mat_mul(*this, v); }
 
-Vec4 mat_mul(const Mat4 &m, const Vec4 &v) {
+inline Vec4 mat_mul(const Mat4 &m, const Vec4 &v) {
    return {
        dot_product(m.get_row(0), v),
        dot_product(m.get_row(1), v),
@@ -692,38 +757,18 @@ Vec4 mat_mul(const Mat4 &m, const Vec4 &v) {
        dot_product(m.get_row(3), v),
    };
 }
-Vec4 operator*(const Mat4 &m1, const Vec4 &v) { return mat_mul(m1, v); }
-
-/* Multiply matrix by vector SIMD */
-
-// Vec4 mat_mul(const Mat4 &m, const Vec4 &v) {
-
-//    __m256 sum = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-
-//    __m256 v1 = _mm256_set_ps();
-//    __m256 v2 = _mm256_set_ps();
-//    _mm_fmadd_ps(v1, v2, sum);
-//    v1 = _mm256_load_pd();
-//    v2 = _mm256_load_pd();
-//    _mm_fmadd_ps(v1, v2, sum);
-//    v1 = _mm256_load_pd();
-//    v2 = _mm256_load_pd();
-//    _mm_fmadd_ps(v1, v2, sum);
-//    v1 = _mm256_load_pd();
-//    v2 = _mm256_load_pd();
-//    _mm_fmadd_ps(v1, v2, sum);
-// }
+inline Vec4 Mat4::operator*(const Vec4 &v) { return mat_mul(*this, v); }
 
 /* Multiply matrices */
-Mat2 mat_mul(const Mat2 &m1, const Mat2 &m2) {
+inline Mat2 mat_mul(const Mat2 &m1, const Mat2 &m2) {
    Mat2 m3;
    m3.set_column(0, mat_mul(m1, m2.get_column(0)));
    m3.set_column(1, mat_mul(m1, m2.get_column(1)));
    return m3;
 }
-Mat2 operator*(const Mat2 &m1, const Mat2 &m2) { return mat_mul(m1, m2); }
+inline Mat2 Mat2::operator*(const Mat2 &m) { return mat_mul(*this, m); }
 
-Mat3 mat_mul(const Mat3 &m1, const Mat3 &m2) {
+inline Mat3 mat_mul(const Mat3 &m1, const Mat3 &m2) {
    Mat3 m3;
    m3.set_column(0, mat_mul(m1, m2.get_column(0)));
    m3.set_column(1, mat_mul(m1, m2.get_column(1)));
@@ -731,9 +776,9 @@ Mat3 mat_mul(const Mat3 &m1, const Mat3 &m2) {
    return m3;
 }
 
-Mat3 operator*(const Mat3 &m1, const Mat3 &m2) { return mat_mul(m1, m2); }
+inline Mat3 Mat3::operator*(const Mat3 &m) { return mat_mul(*this, m); }
 
-Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
+inline Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
    Mat4 m3;
    m3.set_column(0, mat_mul(m1, m2.get_column(0)));
    m3.set_column(1, mat_mul(m1, m2.get_column(1)));
@@ -742,103 +787,36 @@ Mat4 mat_mul(const Mat4 &m1, const Mat4 &m2) {
    return m3;
 }
 
-Mat4 operator*(const Mat4 &m1, const Mat4 &m2) { return mat_mul(m1, m2); }
+inline Mat4 Mat4::operator*(const Mat4 &m) { return mat_mul(*this, m); }
 
-Mat4 mat_concat(std::vector<Mat4> matrices) {
+inline Mat4 mat_concat(std::vector<Mat4> matrices) {
    Mat4 r = Mat4::identity();
    for (size_t i = 0; i < matrices.size(); i++) r = matrices[i] * r;
    return r;
 }
 
 // Cross product
-Vec3 cross_product(const Vec3 &v1, const Vec3 &v2) {
+inline Vec3 cross_product(const Vec3 &v1, const Vec3 &v2) {
    return {Vec3(v1.y() * v2.z() - v1.z() * v2.y(),
                 v1.z() * v2.x() - v1.x() * v2.z(),
                 v1.x() * v2.y() - v1.y() * v2.x())};
 }
 
-Vec4 cross_product(const Vec4 &v1, const Vec4 &v2) {
+inline Vec4 cross_product(const Vec4 &v1, const Vec4 &v2) {
    return {Vec4(v1.y() * v2.z() - v1.z() * v2.y(),
                 v1.z() * v2.x() - v1.x() * v2.z(),
                 v1.x() * v2.y() - v1.y() * v2.x(),
                 0)};
 }
 
-std::vector<Vec4> Mat4::transform_points(const std::vector<Vec4> &points) const {
+inline std::vector<Vec4> Mat4::transform_points(const std::vector<Vec4> &points) const {
    std::vector<Vec4> transformed_points;
    transformed_points.reserve(points.size());
    for (auto p : points) transformed_points.push_back(mat_mul(*this, p));
    return transformed_points;
 }
 
-//
-
-Mat3 Mat3::rotation_around_axis(Vec3 axis, float angle) {
-   if (!axis.is_normalized()) axis = axis.normalized();
-
-   // Sine, cosine and complements of angle
-   float c = cosf(angle);
-   float s = sinf(angle);
-   float c_c = 1 - c;
-   float s_c = 1 - s;
-
-   // Products
-   float x = axis.x();
-   float y = axis.y();
-   float z = axis.z();
-   float xy = x * y;
-   float yz = y * z;
-   float xz = x * z;
-
-   return {c + x * x * c_c,
-           xy * c_c - z * s,
-           xz * c_c + y * s,
-           xy * c_c + z * s,
-           c + y * y * c_c,
-           yz * c_c - x * s,
-           xz * c_c - y * s,
-           yz * c_c + x * s,
-           c + z * z * c_c};
-}
-
-Mat4 Mat4::rotation_around_axis(Vec4 axis, float angle) {
-   if (!axis.is_normalized()) axis = axis.normalized();
-
-   // Sine, cosine and complements of angle
-   float c = cosf(angle);
-   float s = sinf(angle);
-   float c_c = 1 - c;
-   float s_c = 1 - s;
-
-   // Products
-   float x = axis.x();
-   float y = axis.y();
-   float z = axis.z();
-   float xy = x * y;
-   float yz = y * z;
-   float xz = x * z;
-
-   return {
-       c + x * x * c_c,
-       xy * c_c - z * s,
-       xz * c_c + y * s,
-       0,
-       xy * c_c + z * s,
-       c + y * y * c_c,
-       yz * c_c - x * s,
-       0,
-       xz * c_c - y * s,
-       yz * c_c + x * s,
-       c + z * z * c_c,
-       0,
-       0,
-       0,
-       0,
-       1,
-   };
-}
-
-Mat4 Mat4::rotation(float x, float y, float z) {
+inline Mat4 Mat4::rotation(float x, float y, float z) {
    return mat_mul(rotationZ(z), mat_mul(rotationY(y), rotationX(x)));
 
    float cx = cosf(x);
@@ -868,7 +846,7 @@ Mat4 Mat4::rotation(float x, float y, float z) {
    };
 }
 
-Mat4 Mat4::transform(Vec3 translate, Vec3 scale, Vec3 rot) {
+inline Mat4 Mat4::transform(Vec3 translate, Vec3 scale, Vec3 rot) {
    Mat4 tr = Mat4::scaling(scale.x(), scale.y(), scale.z());
    tr = mat_mul(Mat4::rotation(rot.x(), rot.y(), rot.z()), tr);
    tr = mat_mul(Mat4::translation(translate.x(), translate.y(), translate.z()), tr);
