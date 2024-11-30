@@ -15,25 +15,26 @@
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-#ifdef AM_DOUBLE_PRECISON
-#define am_scalar float
-#else
-#define am_scalar double
-#endif
-
 namespace amath {
 
-constexpr float kSmallNumber = 1.e-8f;
+#ifdef AM_DOUBLE_PRECISON
+typedef double scalar;
+#define AM_EPSILON DBL_EPSILON
+#else
+typedef float scalar;
+#define AM_EPSILON FLT_EPSILON
+#endif
 
-constexpr float PI = 3.141592653589793;
-constexpr float Rad2Deg(float a) { return a * 180.f / PI; }
-constexpr float Deg2Rad(float a) { return a * PI / 180.f; }
+const scalar kSmallNumber = 1.e-8f;
+const scalar PI = 3.141592653589793;
 
-bool is_almost_zero(float x, float tolerance = FLT_EPSILON) { return fabsf(x) < tolerance; }
-bool is_almost_zero(double x, double tolerance = DBL_EPSILON) { return fabs(x) < tolerance; }
+inline scalar Rad2Deg(scalar a) { return a * 180.f / PI; }
+inline scalar Deg2Rad(scalar a) { return a * PI / 180.f; }
+
+inline bool isAlmostZero(scalar x, scalar tolerance = FLT_EPSILON) { return fabsf(x) < tolerance; }
 
 template <typename T>
-std::vector<size_t> argsort(const std::vector<T> &array, const bool descending = false) {
+inline std::vector<size_t> argsort(const std::vector<T> &array, const bool descending = false) {
    std::vector<size_t> indices(array.size());
    for (size_t i = 0; i < array.size(); i++) indices[i] = i;
    std::sort(

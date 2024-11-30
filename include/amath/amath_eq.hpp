@@ -75,8 +75,8 @@ struct EqSystem2 {
    // CAUTION: return by reference
    EqSol2 &solve(bool only_independent = true) {
 
-      float D = coef.determinant();
-      bool zero_determinant = is_almost_zero(D);
+      float D = coef.det();
+      bool zero_determinant = isAlmostZero(D);
 
       /* When  D=0,
       D_x==0   and   D_y==0 -> Dependent System
@@ -95,7 +95,7 @@ struct EqSystem2 {
          solution.values = {D_x / D, D_y / D};
          solution.type = EqType::kIndependent;
       } else {
-         if (is_almost_zero(D_x) && is_almost_zero(D_y)) {
+         if (isAlmostZero(D_x) && isAlmostZero(D_y)) {
             // Return solution for x = 0, for example
             solution.values = {0, constants[0] / coef[2]};
             solution.type = EqType::kDependent;
@@ -131,9 +131,9 @@ struct EqSystem3 {
          Vec4/Eq3 eq3 [a3 * x + b3 * y + c3 * z] = [d3]
       */
 
-      coef.set_row(0, {eq1.x(), eq1.y(), eq1.z()});
-      coef.set_row(1, {eq2.x(), eq2.y(), eq2.z()});
-      coef.set_row(2, {eq3.x(), eq3.y(), eq3.z()});
+      coef.setRow(0, {eq1.x(), eq1.y(), eq1.z()});
+      coef.setRow(1, {eq2.x(), eq2.y(), eq2.z()});
+      coef.setRow(2, {eq3.x(), eq3.y(), eq3.z()});
 
       constants[0] = eq1.w();
       constants[1] = eq2.w();
@@ -169,8 +169,8 @@ struct EqSystem3 {
    // CAUTION: return by reference
    EqSol3 &solve(bool only_independent = true) {
 
-      float D = coef.determinant();
-      bool zero_determinant = is_almost_zero(D);
+      float D = coef.det();
+      bool zero_determinant = isAlmostZero(D);
 
       /* When  D=0,
       D_x==0   and   D_y==0 and D_z==0-> Dependent System
@@ -199,7 +199,7 @@ struct EqSystem3 {
          solution.type = EqType::kIndependent;
       } else {
          solution.values = Vec3::nan();
-         if (is_almost_zero(D_x) && is_almost_zero(D_y) && is_almost_zero(D_z)) {
+         if (isAlmostZero(D_x) && isAlmostZero(D_y) && isAlmostZero(D_z)) {
             // Could be dependent in several different manners
             // Currently, don't bother calculating a possible solution, just return NaN
             // solution.values = Vec3::nan();
@@ -236,10 +236,10 @@ struct EqSystem4 {
          Vec4 coef3 [a3 * x + b3 * y + c3 * z + d3 * w] =  (float const4)   [k3]
       */
 
-      coef.set_row(0, coef1);
-      coef.set_row(1, coef2);
-      coef.set_row(2, coef3);
-      coef.set_row(3, coef4);
+      coef.setRow(0, coef1);
+      coef.setRow(1, coef2);
+      coef.setRow(2, coef3);
+      coef.setRow(3, coef4);
 
       constants[0] = const1;
       constants[1] = const2;
@@ -278,8 +278,8 @@ struct EqSystem4 {
    // CAUTION: return by reference
    EqSol4 &solve(bool only_independent = true) {
 
-      float D = coef.determinant();
-      bool zero_determinant = is_almost_zero(D);
+      float D = coef.det();
+      bool zero_determinant = isAlmostZero(D);
 
       /* When  D=0,
       D_x==0   and   D_y==0 and D_z==0 and D_w==0-> Dependent System
@@ -295,8 +295,8 @@ struct EqSystem4 {
       Vec4 cramer_determinants;
       for (int i = 0; i < 4; i++) {
          cramer_matrix = coef;
-         cramer_matrix.set_column(i, constants);
-         cramer_determinants[i] = cramer_matrix.determinant();
+         cramer_matrix.setCol(i, constants);
+         cramer_determinants[i] = cramer_matrix.det();
       }
 
       if (!zero_determinant) {
@@ -305,7 +305,7 @@ struct EqSystem4 {
       } else {
          bool is_dependent = true;
          for (int i = 0; i < 4; i++)
-            is_dependent = is_dependent && is_almost_zero(cramer_determinants[i]);
+            is_dependent = is_dependent && isAlmostZero(cramer_determinants[i]);
 
          solution.values = Vec4::nan();
          if (is_dependent) {
