@@ -6,6 +6,7 @@
 
 #include "core.h"
 #include "utils.h"
+#include "equation.h"
 
 namespace amath {
 
@@ -20,6 +21,15 @@ struct Line2 {
 
    scalar distance(const Point2 &point) {
       // TODO
+   }
+
+   bool intersect(Line2 other) {
+      EqSystem2 eqsys(Mat2(v, -other.v), other.p - p);
+      EqSol2 sol = eqsys.solve();
+      if (sol.type == EqType::kIndependent && sol.values.x() >= 0 && sol.values.x() <= 1 &&
+          sol.values.y() >= 0 && sol.values.y() <= 1)
+         return true;
+      else return false;
    }
 };
 
