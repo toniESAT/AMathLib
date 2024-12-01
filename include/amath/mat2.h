@@ -3,8 +3,9 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <vector>
 
-#include "common_defs.h"
+#include "utils.h"
 
 #include "vec2.h"
 
@@ -52,6 +53,13 @@ struct Mat2 {
    scalar det() const { return d[0] * d[3] - d[1] * d[2]; }
 
    Mat2 transposed() const { return {d[0], d[2], d[1], d[3]}; };
+
+   std::vector<Vec2> transformPoints(const std::vector<Vec2> &points) const {
+      std::vector<Vec2> transformed_points;
+      transformed_points.reserve(points.size());
+      for (auto p : points) transformed_points.push_back(*this * p);
+      return transformed_points;
+   }
 
    void print() const { printf("Mat2:\n[%.4f][%.4f]\n[%.4f][%.4f]", d[0], d[2], d[1], d[3]); }
 
@@ -107,10 +115,7 @@ struct Mat2 {
 
    // Operations with vectors
    Vec2 operator*(const Vec2 &v) const {
-      return {
-          this->getRow(0).dot(v),
-          this->getRow(1).dot(v),
-      };
+      return {d[0] * v.x() + d[2] * v.y(), d[1] * v.x() + d[3] * v.y()};
    }
 
    // Operations with other matrices
@@ -136,6 +141,16 @@ struct Mat2 {
       this->setCol(0, (*this) * m.getCol(0));
       this->setCol(1, (*this) * m.getCol(1));
       return *this;
+   }
+
+   // Comparison
+   bool operator==(const Mat2 &m) const {
+      return fabs(d[0] - m.d[0]) < AM_EPSILON && fabs(d[1] - m.d[1]) < AM_EPSILON &&
+             fabs(d[2] - m.d[2]) < AM_EPSILON && fabs(d[3] - m.d[3]) < AM_EPSILON;
+   }
+   bool operator!=(const Mat2 &m) const {
+      return fabs(d[0] - m.d[0]) > AM_EPSILON || fabs(d[1] - m.d[1]) > AM_EPSILON ||
+             fabs(d[2] - m.d[2]) > AM_EPSILON || fabs(d[3] - m.d[3]) > AM_EPSILON;
    }
 };
 

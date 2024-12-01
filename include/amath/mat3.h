@@ -3,8 +3,9 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <vector>
 
-#include "common_defs.h"
+#include "utils.h"
 
 #include "vec3.h"
 
@@ -94,6 +95,20 @@ struct Mat3 {
 
    Mat3 transposed() const { return {d[0], d[3], d[6], d[1], d[4], d[7], d[2], d[5], d[8]}; };
 
+   std::vector<Vec3> transformPoints(const std::vector<Vec3> &points) const {
+      std::vector<Vec3> transformed_points;
+      transformed_points.reserve(points.size());
+      for (auto p : points) transformed_points.push_back(*this * p);
+      return transformed_points;
+   }
+
+   std::vector<Vec2> transformPoints(const std::vector<Vec2> &points) const {
+      std::vector<Vec2> transformed_points;
+      transformed_points.reserve(points.size());
+      for (auto p : points) transformed_points.push_back(*this * p);
+      return transformed_points;
+   }
+
    void print() const {
       printf("Mat3:\n");
       for (size_t i = 0; i < 3; i++)
@@ -178,11 +193,14 @@ struct Mat3 {
 
    // Operations with vectors
    Vec3 operator*(const Vec3 &v) const {
-      return {
-          this->getRow(0).dot(v),
-          this->getRow(1).dot(v),
-          this->getRow(2).dot(v),
-      };
+      return {d[0] * v.x() + d[3] * v.y() + d[6],
+              d[1] * v.x() + d[4] * v.y() + d[7],
+              d[2] * v.x() + d[5] * v.y() + d[8]};
+   }
+
+   Vec2 operator*(const Vec2 &v) const {
+      scalar w = d[2] * v.x() + d[5] * v.y() + d[8];
+      return {(d[0] * v.x() + d[3] * v.y() + d[6]) / w, (d[1] * v.x() + d[4] * v.y() + d[7]) / w};
    }
 
    // Operations with other matrices

@@ -3,8 +3,9 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <vector>
 
-#include "common_defs.h"
+#include "utils.h"
 
 #include "mat3.h"
 #include "vec3.h"
@@ -363,7 +364,6 @@ struct Mat4 {
    }
 
    // Operations with vectors
-   // TODO: unroll these functions
    Vec4 operator*(const Vec4 &v) const {
       scalar w = d[3] * v.x() + d[7] * v.y() + d[11] * v.z() + d[15];
 
@@ -440,6 +440,14 @@ struct Mat4 {
       this->setCol(3, (*this) * m.getCol(3));
       return *this;
    }
+
+   // Comparison
+  //  bool operator==(const Mat4 &v) const {
+  //     return fabs(x() - v.x()) < AM_EPSILON && fabs(y() - v.y()) < AM_EPSILON;
+  //  }
+  //  bool operator!=(const Mat4 &v) const {
+  //     return fabs(x() - v.x()) > AM_EPSILON || fabs(y() - v.y()) > AM_EPSILON;
+  //  }
 };
 
 }  // namespace amath

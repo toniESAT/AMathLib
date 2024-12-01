@@ -4,7 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "common_defs.h"
+#include "utils.h"
 #include "utils.h"
 
 namespace amath {
@@ -43,12 +43,12 @@ struct Vec3 {
 
    Vec3 normalized(scalar tolerance = AM_EPSILON) const {
       scalar l = length();
-      if (!isAlmostZero(l, tolerance)) return {x() / l, y() / l, z() / l};
+      if (!almostZero(l, tolerance)) return {x() / l, y() / l, z() / l};
       else return {0, 0, 0};
    }
 
    bool isNormalized(const scalar tolerance = AM_EPSILON) const {
-      return isAlmostZero(lengthSquared() - 1, tolerance);
+      return almostZero(lengthSquared() - 1, tolerance);
    }
 
    scalar dot(const Vec3 &v) const { return x() * v.x() + y() * v.y() + z() * v.z(); }

@@ -4,7 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "common_defs.h"
+#include "utils.h"
 #include "utils.h"
 
 namespace amath {
@@ -45,15 +45,15 @@ struct Vec4 {
    Vec4 normalized(scalar tolerance = AM_EPSILON) const {
       scalar k = 1 / length();
       // If homogeneous vector (w==0), normalize to length = 1
-      if (isAlmostZero(d[3]))
-         //  if (isAlmostZero(l, tolerance)) return {0, 0, 0, 0};  // TODO: Prevent div by 0 ???
+      if (almostZero(d[3]))
+         //  if (almostZero(l, tolerance)) return {0, 0, 0, 0};  // TODO: Prevent div by 0 ???
          return {x() * k, y() * k, z() * k, 0};
       // If homogeneous point (w!=1), normalize to w = 1
       return *this * (1.f / d[3]);
    }
 
    bool isNormalized(const scalar tolerance = AM_EPSILON) {
-      return isAlmostZero(lengthSquared() - 1, tolerance);
+      return almostZero(lengthSquared() - 1, tolerance);
    }
 
    scalar dot(const Vec4 &v) const { return x() * v.x() + y() * v.y() + z() * v.z() + w() * v.w(); }

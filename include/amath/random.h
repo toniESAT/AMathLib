@@ -4,6 +4,8 @@
 #include <math.h>
 #include <random>
 
+#include "utils.h"
+
 namespace amath {
 
 struct RandomIntUniform {
@@ -26,24 +28,24 @@ struct RandomIntUniform {
 };
 
 struct RandomFloatUniform {
-   RandomFloatUniform(float low, float high) : low(low), high(high) {
+   RandomFloatUniform(scalar low, scalar high) : low(low), high(high) {
       gen = std::mt19937(rd());
-      dist = std::uniform_real_distribution<float>(low, high);
+      dist = std::uniform_real_distribution<scalar>(low, high);
    }
 
    void seed(unsigned int seed) { gen.seed(seed); };
 
-   void setRange(float low, float high) {
-      dist = std::uniform_real_distribution<float>(low, high);
+   void setRange(scalar low, scalar high) {
+      dist = std::uniform_real_distribution<scalar>(low, high);
    }
 
-   float generate() { return dist(gen); }
+   scalar generate() { return dist(gen); }
 
    private:
-   float low, high;
+   scalar low, high;
    std::random_device rd;
    std::mt19937 gen;
-   std::uniform_real_distribution<float> dist;
+   std::uniform_real_distribution<scalar> dist;
 };
 
 }  // namespace amath
