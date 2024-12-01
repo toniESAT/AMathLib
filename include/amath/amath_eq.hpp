@@ -6,14 +6,14 @@
 
 namespace amath {
 
-typedef Vec3 Eq2; // For readability
+typedef Vec3 Eq2;  // For readability
 
 enum class EqType {
    kUnsolved,
-   kIndependent, // Unique solution
+   kIndependent,  // Unique solution
    kDependent,
    kInconsistent,
-   kNotIndependent // Either dependent or inconsistent
+   kNotIndependent  // Either dependent or inconsistent
 };
 
 struct EqSol2 {
@@ -26,8 +26,8 @@ struct EqSystem2 {
    Vec2 constants;
    EqSol2 solution = {Vec2::nan(), EqType::kUnsolved};
 
-   EqSystem2(Mat2 coefficients, Vec2 constants) : coef(coefficients), constants(constants){};
-   EqSystem2() : EqSystem2(Mat2{}, Vec2{}){}; // Init all to 0
+   EqSystem2(Mat2 coefficients, Vec2 constants) : coef(coefficients), constants(constants) {};
+   EqSystem2() : EqSystem2(Mat2{}, Vec2{}) {};  // Init all to 0
    EqSystem2(const Eq2 &eq1, const Eq2 &eq2) {
       /* Current implementation:
                       Mat2 coef     Vec2 consts
@@ -49,32 +49,31 @@ struct EqSystem2 {
 
       for (int i = 0; i < 2; i++)
          printf("\tEq %d: %+.3f * x %+.3f * y = %+.3f\n",
-                    i + 1,
-                    coef[i + 2 * 0],
-                    coef[i + 2 * 1],
-                    constants[i]);
+                i + 1,
+                coef[i + 2 * 0],
+                coef[i + 2 * 1],
+                constants[i]);
 
       printf("Solution: ");
       switch (solution.type) {
-      case EqType::kIndependent:
-         printf("x = %+.3f, y = %+.3f:\n", solution.values.x(), solution.values.y());
-         break;
-      case EqType::kNotIndependent:
-         printf("System is not independent, no solution was calculated.");
-         break;
-      case EqType::kDependent:
-         printf("Dependent system, an example solution is: x = %+.3f, y = %+.3f:\n",
-                    solution.values.x(),
-                    solution.values.y());
-         break;
-      case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
-      case EqType::kUnsolved: printf("Unsolved\n"); break;
+         case EqType::kIndependent:
+            printf("x = %+.3f, y = %+.3f:\n", solution.values.x(), solution.values.y());
+            break;
+         case EqType::kNotIndependent:
+            printf("System is not independent, no solution was calculated.");
+            break;
+         case EqType::kDependent:
+            printf("Dependent system, an example solution is: x = %+.3f, y = %+.3f:\n",
+                   solution.values.x(),
+                   solution.values.y());
+            break;
+         case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
+         case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
 
    // CAUTION: return by reference
    EqSol2 &solve(bool only_independent = true) {
-
       float D = coef.det();
       bool zero_determinant = isAlmostZero(D);
 
@@ -85,11 +84,11 @@ struct EqSystem2 {
       if (zero_determinant && only_independent) {
          solution.values = Vec2::nan();
          solution.type = EqType::kNotIndependent;
-         return solution; // If no unique solution, return early
+         return solution;  // If no unique solution, return early
       }
 
-      float D_x = coef[3] * constants[0] - coef[2] * constants[1]; // b2*c1-b1*c2
-      float D_y = coef[0] * constants[1] - coef[1] * constants[0]; // a1*c2-a2*c1
+      float D_x = coef[3] * constants[0] - coef[2] * constants[1];  // b2*c1-b1*c2
+      float D_y = coef[0] * constants[1] - coef[1] * constants[0];  // a1*c2-a2*c1
 
       if (!zero_determinant) {
          solution.values = {D_x / D, D_y / D};
@@ -121,8 +120,8 @@ struct EqSystem3 {
    Vec3 constants;
    EqSol3 solution = {Vec3::nan(), EqType::kUnsolved};
 
-   EqSystem3(Mat3 coefficients, Vec3 constants) : coef(coefficients), constants(constants){};
-   EqSystem3() : EqSystem3(Mat3{}, Vec3{}){}; // Init all to 0
+   EqSystem3(Mat3 coefficients, Vec3 constants) : coef(coefficients), constants(constants) {};
+   EqSystem3() : EqSystem3(Mat3{}, Vec3{}) {};  // Init all to 0
    EqSystem3(const Eq3 &eq1, const Eq3 &eq2, const Eq3 &eq3) {
       /* Current implementation:
                                Mat3 coef         Vec3 consts
@@ -145,30 +144,29 @@ struct EqSystem3 {
 
       for (int i = 0; i < 3; i++)
          printf("\tEq %d: %+.3f * x %+.3f * y %+.3f * z = %+.3f\n",
-                    i + 1,
-                    coef[i + 3 * 0],
-                    coef[i + 3 * 1],
-                    coef[i + 3 * 2],
-                    constants[i]);
+                i + 1,
+                coef[i + 3 * 0],
+                coef[i + 3 * 1],
+                coef[i + 3 * 2],
+                constants[i]);
       printf("Solution: ");
       switch (solution.type) {
-      case EqType::kIndependent:
-         printf("x = %+.3f, y = %+.3f, z = %+.3f\n",
-                    solution.values.x(),
-                    solution.values.y(),
-                    solution.values.z());
-         break;
-      case EqType::kNotIndependent:
-         printf("System is not independent, no solution was calculated.");
-         break;
-      case EqType::kDependent: printf("Dependent system, infinite solutions\n"); break;
-      case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
-      case EqType::kUnsolved: printf("Unsolved\n"); break;
+         case EqType::kIndependent:
+            printf("x = %+.3f, y = %+.3f, z = %+.3f\n",
+                   solution.values.x(),
+                   solution.values.y(),
+                   solution.values.z());
+            break;
+         case EqType::kNotIndependent:
+            printf("System is not independent, no solution was calculated.");
+            break;
+         case EqType::kDependent: printf("Dependent system, infinite solutions\n"); break;
+         case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
+         case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
    // CAUTION: return by reference
    EqSol3 &solve(bool only_independent = true) {
-
       float D = coef.det();
       bool zero_determinant = isAlmostZero(D);
 
@@ -179,7 +177,7 @@ struct EqSystem3 {
       if (zero_determinant && only_independent) {
          solution.values = Vec3::nan();
          solution.type = EqType::kNotIndependent;
-         return solution; // If no unique solution, return early
+         return solution;  // If no unique solution, return early
       }
 
       float D_x = constants[0] * coef[4] * coef[8] + constants[2] * coef[3] * coef[7] +
@@ -224,11 +222,10 @@ struct EqSystem4 {
    Vec4 constants;
    EqSol4 solution = {Vec4::nan(), EqType::kUnsolved};
 
-   EqSystem4(Mat4 coefficients, Vec4 constants) : coef(coefficients), constants(constants){};
-   EqSystem4() : EqSystem4(Mat4{}, Vec4{}){}; // Init all to 0
+   EqSystem4(Mat4 coefficients, Vec4 constants) : coef(coefficients), constants(constants) {};
+   EqSystem4() : EqSystem4(Mat4{}, Vec4{}) {};  // Init all to 0
    EqSystem4(const Vec4 &coef1, const float const1, const Vec4 &coef2, const float const2,
              const Vec4 &coef3, const float const3, const Vec4 &coef4, const float const4) {
-
       /*      args           Mat4 coef                   args   Vec4 consts
          Vec4 coef1 [a1 * x + b1 * y + c1 * z + d1 * w] =  (float const1)   [k1]
          Vec4 coef2 [a2 * x + b2 * y + c2 * z + d2 * w] =  (float const2)   [k2]
@@ -252,32 +249,31 @@ struct EqSystem4 {
 
       for (int i = 0; i < 4; i++)
          printf("\tEq %d: %+.3f * x %+.3f * y %+.3f * z %+.3f * w = %+.3f\n",
-                    i + 1,
-                    coef[i + 4 * 0],
-                    coef[i + 4 * 1],
-                    coef[i + 4 * 2],
-                    coef[i + 4 * 3],
-                    constants[i]);
+                i + 1,
+                coef[i + 4 * 0],
+                coef[i + 4 * 1],
+                coef[i + 4 * 2],
+                coef[i + 4 * 3],
+                constants[i]);
       printf("Solution: ");
       switch (solution.type) {
-      case EqType::kIndependent:
-         printf("x = %+.3f, y = %+.3f, z = %+.3f,  w = %+.3f\n",
-                    solution.values.x(),
-                    solution.values.y(),
-                    solution.values.z(),
-                    solution.values.w());
-         break;
-      case EqType::kNotIndependent:
-         printf("System is not independent, no solution was calculated.");
-         break;
-      case EqType::kDependent: printf("Dependent system, infinite solutions\n"); break;
-      case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
-      case EqType::kUnsolved: printf("Unsolved\n"); break;
+         case EqType::kIndependent:
+            printf("x = %+.3f, y = %+.3f, z = %+.3f,  w = %+.3f\n",
+                   solution.values.x(),
+                   solution.values.y(),
+                   solution.values.z(),
+                   solution.values.w());
+            break;
+         case EqType::kNotIndependent:
+            printf("System is not independent, no solution was calculated.");
+            break;
+         case EqType::kDependent: printf("Dependent system, infinite solutions\n"); break;
+         case EqType::kInconsistent: printf("Inconsistent system, has no solutions\n"); break;
+         case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
    // CAUTION: return by reference
    EqSol4 &solve(bool only_independent = true) {
-
       float D = coef.det();
       bool zero_determinant = isAlmostZero(D);
 
@@ -288,7 +284,7 @@ struct EqSystem4 {
       if (zero_determinant && only_independent) {
          solution.values = Vec4::nan();
          solution.type = EqType::kNotIndependent;
-         return solution; // If no unique solution, return early
+         return solution;  // If no unique solution, return early
       }
 
       Mat4 cramer_matrix;
@@ -323,4 +319,4 @@ struct EqSystem4 {
    }
 };
 
-} // namespace amath
+}  // namespace amath
