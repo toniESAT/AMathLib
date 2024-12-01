@@ -401,7 +401,24 @@ struct Mat4 {
               d[14] + m.d[14],
               d[15] + m.d[15]};
    }
-   Mat4 operator-(const Mat4 &m) const { return *this + (-m); }
+   Mat4 operator-(const Mat4 &m) const {
+      return {d[0] - m.d[0],
+              d[1] - m.d[1],
+              d[2] - m.d[2],
+              d[3] - m.d[3],
+              d[4] - m.d[4],
+              d[5] - m.d[5],
+              d[6] - m.d[6],
+              d[7] - m.d[7],
+              d[8] - m.d[8],
+              d[9] - m.d[9],
+              d[10] - m.d[10],
+              d[11] - m.d[11],
+              d[12] - m.d[12],
+              d[13] - m.d[13],
+              d[14] - m.d[14],
+              d[15] - m.d[15]};
+   }
 
    Mat4 &operator+=(const Mat4 &m) {
       d[0] += m.d[0];
@@ -423,7 +440,22 @@ struct Mat4 {
       return *this;
    }
    Mat4 &operator-=(const Mat4 &m) {
-      *this += (-m);
+      d[0] -= m.d[0];
+      d[1] -= m.d[1];
+      d[2] -= m.d[2];
+      d[3] -= m.d[3];
+      d[4] -= m.d[4];
+      d[5] -= m.d[5];
+      d[6] -= m.d[6];
+      d[7] -= m.d[7];
+      d[8] -= m.d[8];
+      d[9] -= m.d[9];
+      d[10] -= m.d[10];
+      d[11] -= m.d[11];
+      d[12] -= m.d[12];
+      d[13] -= m.d[13];
+      d[14] -= m.d[14];
+      d[15] -= m.d[15];
       return *this;
    }
 
@@ -442,12 +474,12 @@ struct Mat4 {
    }
 
    // Comparison
-  //  bool operator==(const Mat4 &v) const {
-  //     return fabs(x() - v.x()) < AM_EPSILON && fabs(y() - v.y()) < AM_EPSILON;
-  //  }
-  //  bool operator!=(const Mat4 &v) const {
-  //     return fabs(x() - v.x()) > AM_EPSILON || fabs(y() - v.y()) > AM_EPSILON;
-  //  }
+   //  bool operator==(const Mat4 &v) const {
+   //     return fabs(x() - v.x()) < AM_EPSILON && fabs(y() - v.y()) < AM_EPSILON;
+   //  }
+   //  bool operator!=(const Mat4 &v) const {
+   //     return fabs(x() - v.x()) > AM_EPSILON || fabs(y() - v.y()) > AM_EPSILON;
+   //  }
 };
 
 }  // namespace amath

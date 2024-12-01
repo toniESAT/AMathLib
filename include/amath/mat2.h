@@ -122,7 +122,9 @@ struct Mat2 {
    Mat2 operator+(const Mat2 &m) const {
       return {d[0] + m.d[0], d[1] + m.d[1], d[2] + m.d[2], d[3] + m.d[3]};
    }
-   Mat2 operator-(const Mat2 &m) const { return *this + (-m); }
+   Mat2 operator-(const Mat2 &m) const {
+      return {d[0] - m.d[0], d[1] - m.d[1], d[2] - m.d[2], d[3] - m.d[3]};
+   }
 
    Mat2 &operator+=(const Mat2 &m) {
       d[0] += m.d[0];
@@ -132,7 +134,10 @@ struct Mat2 {
       return *this;
    }
    Mat2 &operator-=(const Mat2 &m) {
-      *this += (-m);
+      d[0] -= m.d[0];
+      d[1] -= m.d[1];
+      d[2] -= m.d[2];
+      d[3] -= m.d[3];
       return *this;
    }
 
