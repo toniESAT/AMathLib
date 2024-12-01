@@ -3,7 +3,7 @@ Test equation solver in 2D and 3D
 Generated equations using this website:
 https://courses.lumenlearning.com/wmopen-collegealgebra/chapter/introduction-systems-of-linear-equations-two-variables/
 */
-#include <amath_eq.h>
+#include <amath/equation.h>
 #include <cassert>
 #include <climits>
 #include <cstdio>

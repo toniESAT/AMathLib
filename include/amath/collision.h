@@ -1,8 +1,8 @@
 #pragma once
 
-#include <amath_core.hpp>
-#include <amath_geometry.hpp>
-#include <amath_eq.hpp>
+#include "core.h"
+#include "geometry.h"
+#include "equation.h"
 #include <vector>
 
 namespace amath {
@@ -26,7 +26,6 @@ namespace amath {
 //    }
 
 bool SegmentIntersection(Segment seg1, Segment seg2) {
-
    EqSystem2 eqsys(Mat2(seg1.v, -seg2.v), seg2.p - seg1.p);
    EqSol2 sol = eqsys.solve();
    if (sol.type == EqType::kIndependent && sol.values.x() >= 0 && sol.values.x() <= 1 &&
@@ -35,4 +34,4 @@ bool SegmentIntersection(Segment seg1, Segment seg2) {
    else return false;
 }
 
-} // namespace amath
+}  // namespace amath

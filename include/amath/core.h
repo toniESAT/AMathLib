@@ -1,10 +1,9 @@
 #pragma once
 
 #include <math.h>
-#include <immintrin.h>
 #include <vector>
 
-#include "amath_utils.hpp"
+#include "utils.h"
 
 namespace amath {
 

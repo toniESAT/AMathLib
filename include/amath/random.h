@@ -2,7 +2,6 @@
 
 #include <math.h>
 #include <random>
-#include <immintrin.h>
 
 namespace amath {
 

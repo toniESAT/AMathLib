@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <vector>
 
-#include <amath_core.hpp>
-#include <amath_utils.hpp>
+#include "core.h"
+#include "utils.h"
 
 namespace amath {
 

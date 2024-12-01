@@ -1,8 +1,8 @@
 #pragma once
 
 #include <math.h>
-#include <amath_core.hpp>
-#include <amath_utils.hpp>
+#include "core.h"
+#include "utils.h"
 
 namespace amath {
 
