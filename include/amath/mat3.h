@@ -66,14 +66,14 @@ struct Mat3 {
     *****  Getters/Setters  *****
     *****************************/
 
-   Vec3 getCol(int j) const { return {d[3 * j], d[3 * j + 1], d[3 * j + 2]}; }
-   Vec3 getRow(int i) const { return {d[i], d[i + 3], d[i + 6]}; }
-   void setCol(int j, const Vec3 &v) {
+   Vec3 getCol(size_t j) const { return {d[3 * j], d[3 * j + 1], d[3 * j + 2]}; }
+   Vec3 getRow(size_t i) const { return {d[i], d[i + 3], d[i + 6]}; }
+   void setCol(size_t j, const Vec3 &v) {
       d[3 * j] = v[0];
       d[3 * j + 1] = v[1];
       d[3 * j + 2] = v[2];
    }
-   void setRow(int i, const Vec3 &v) {
+   void setRow(size_t i, const Vec3 &v) {
       d[i] = v[0];
       d[i + 3] = v[1];
       d[i + 6] = v[2];
@@ -83,7 +83,7 @@ struct Mat3 {
     *********  Methods  *********
     *****************************/
 
-   static int size() { return 9; }
+   static size_t size() { return 9; }
    static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
    static Mat3 nan() { return Mat3(nanf("")); };
 
@@ -96,7 +96,7 @@ struct Mat3 {
 
    void print() const {
       printf("Mat3:\n");
-      for (int i = 0; i < 3; i++)
+      for (size_t i = 0; i < 3; i++)
          printf("[%.4f][%.4f][%.4f]\n", d[3 * i], d[3 * i + 1], d[3 * i + 2]);
    }
 
@@ -105,8 +105,8 @@ struct Mat3 {
     *****************************/
 
    // Access
-   scalar operator[](int i) const { return d[i]; }
-   scalar &operator[](int i) { return d[i]; }
+   scalar operator[](size_t i) const { return d[i]; }
+   scalar &operator[](size_t i) { return d[i]; }
 
    scalar operator()(size_t i, size_t j) const {
       // if (i < 3 && j < 3)

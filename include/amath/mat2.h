@@ -32,13 +32,13 @@ struct Mat2 {
     *****  Getters/Setters  *****
     *****************************/
 
-   Vec2 getCol(const int j) const { return {d[2 * j], d[2 * j + 1]}; }
-   Vec2 getRow(const int i) const { return {d[i], d[i + 2]}; }
-   void setCol(const int j, const Vec2 &v) {
+   Vec2 getCol(const size_t j) const { return {d[2 * j], d[2 * j + 1]}; }
+   Vec2 getRow(const size_t i) const { return {d[i], d[i + 2]}; }
+   void setCol(const size_t j, const Vec2 &v) {
       d[2 * j] = v[0];
       d[2 * j + 1] = v[1];
    }
-   void setRow(const int i, const Vec2 &v) {
+   void setRow(const size_t i, const Vec2 &v) {
       d[i] = v[0];
       d[i + 2] = v[1];
    }
@@ -47,7 +47,7 @@ struct Mat2 {
     *********  Methods  *********
     *****************************/
 
-   static int size() { return 4; }
+   static size_t size() { return 4; }
 
    scalar det() const { return d[0] * d[3] - d[1] * d[2]; }
 
@@ -60,13 +60,13 @@ struct Mat2 {
     *****************************/
 
    // Access
-   scalar operator[](int i) const { return d[i]; }
-   scalar &operator[](int i) { return d[i]; }
+   scalar operator[](size_t i) const { return d[i]; }
+   scalar &operator[](size_t i) { return d[i]; }
 
-   scalar operator()(int i, int j) const {
+   scalar operator()(size_t i, size_t j) const {
       if (i >= 0 && i < 2 && j >= 0 && j < 2) return d[i * 2 + j];
    }
-   scalar &operator()(int i, int j) {
+   scalar &operator()(size_t i, size_t j) {
       if (i >= 0 && i < 2 && j >= 0 && j < 2) return d[i * 2 + j];
    }
 

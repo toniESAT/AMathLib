@@ -110,8 +110,8 @@ struct Vec3 {
    }
 
    // Access
-   scalar operator[](const int i) const { return d[i]; }
-   scalar &operator[](const int i) { return d[i]; }
+   scalar operator[](const size_t i) const { return d[i]; }
+   scalar &operator[](const size_t i) { return d[i]; }
 };
 
 }  // namespace amath

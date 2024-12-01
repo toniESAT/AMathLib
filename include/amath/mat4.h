@@ -149,15 +149,15 @@ struct Mat4 {
     *****  Getters/Setters  *****
     *****************************/
 
-   Vec4 getCol(int j) const { return {d[4 * j], d[4 * j + 1], d[4 * j + 2], d[4 * j + 3]}; }
-   Vec4 getRow(int i) const { return {d[i], d[i + 4], d[i + 8], d[i + 12]}; }
-   void setCol(int j, const Vec4 &v) {
+   Vec4 getCol(size_t j) const { return {d[4 * j], d[4 * j + 1], d[4 * j + 2], d[4 * j + 3]}; }
+   Vec4 getRow(size_t i) const { return {d[i], d[i + 4], d[i + 8], d[i + 12]}; }
+   void setCol(size_t j, const Vec4 &v) {
       d[4 * j] = v[0];
       d[4 * j + 1] = v[1];
       d[4 * j + 2] = v[2];
       d[4 * j + 3] = v[3];
    }
-   void setRow(int i, const Vec4 &v) {
+   void setRow(size_t i, const Vec4 &v) {
       d[i] = v[0];
       d[i + 4] = v[1];
       d[i + 8] = v[2];
@@ -168,11 +168,11 @@ struct Mat4 {
     *********  Methods  *********
     *****************************/
 
-   static int size() { return 16; }
+   static size_t size() { return 16; }
 
    void print() const {
       printf("Mat4\n");
-      for (int i = 0; i < 4; i++)
+      for (size_t i = 0; i < 4; i++)
          printf(
              "[%.4f][%.4f][%.4f][%.4f]\n", d[4 * 0 + i], d[4 * 1 + i], d[4 * 2 + i], d[4 * 3 + i]);
       printf("\n");
@@ -186,7 +186,7 @@ struct Mat4 {
       };
 
       size_t adj_idx = 0;
-      for (int i = 0; i < 16; i++) {
+      for (size_t i = 0; i < 16; i++) {
          if (i % 4 != row && i / 4 != col) adj[adj_idx++] = d[i];
       }
       return adj;
@@ -198,7 +198,7 @@ struct Mat4 {
       Mat3 adj;
       scalar det = 0;
       // Get det by cofactor expansion for the first row
-      for (int i = 0; i < 4; i++) {
+      for (size_t i = 0; i < 4; i++) {
          adj = getAdjugate(0, i);
          det += sign[i] * d[i * 4] * adj.det();
       }
@@ -243,13 +243,13 @@ struct Mat4 {
     *****************************/
 
    // Access
-   scalar operator[](int i) const { return d[i]; }
-   scalar &operator[](int i) { return d[i]; }
+   scalar operator[](size_t i) const { return d[i]; }
+   scalar &operator[](size_t i) { return d[i]; }
 
-   scalar operator()(int i, int j) const {
+   scalar operator()(size_t i, size_t j) const {
       if (i >= 0 && i < 4 && j >= 0 && j < 4) return d[i * 4 + j];
    }
-   scalar &operator()(int i, int j) {
+   scalar &operator()(size_t i, size_t j) {
       if (i >= 0 && i < 4 && j >= 0 && j < 4) return d[i * 4 + j];
    }
 
@@ -422,7 +422,7 @@ struct Mat4 {
       d[15] += m.d[15];
       return *this;
    }
-   Mat4 &operator+=(const Mat4 &m) {
+   Mat4 &operator-=(const Mat4 &m) {
       *this += (-m);
       return *this;
    }
