@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __UTILS_H__
+#define __UTILS_H__
 
 #include <float.h>
 #include <vector>
@@ -47,3 +48,5 @@ inline std::vector<size_t> argsort(const std::vector<T> &array, const bool desce
 }
 
 }  // namespace amath
+
+#endif /* __UTILS_H__ */

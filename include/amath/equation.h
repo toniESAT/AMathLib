@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __EQUATION_H__
+#define __EQUATION_H__
 
 #include <math.h>
 #include "core.h"
@@ -320,3 +321,5 @@ struct EqSystem4 {
 };
 
 }  // namespace amath
+
+#endif /* __EQUATION_H__ */

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __CORE_H__
+#define __CORE_H__
 
 #include <math.h>
 #include <vector>
@@ -1112,3 +1113,5 @@ struct Mat4 {
 };
 
 }  // namespace amath
+
+#endif /* __CORE_H__ */

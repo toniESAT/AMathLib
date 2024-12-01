@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RANDOM_H__
+#define __RANDOM_H__
 
 #include <math.h>
 #include <random>
@@ -46,3 +47,5 @@ struct RandomFloatUniform {
 };
 
 }  // namespace amath
+
+#endif /* __RANDOM_H__ */
