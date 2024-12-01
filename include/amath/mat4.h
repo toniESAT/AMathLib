@@ -474,12 +474,26 @@ struct Mat4 {
    }
 
    // Comparison
-   //  bool operator==(const Mat4 &v) const {
-   //     return fabs(x() - v.x()) < AM_EPSILON && fabs(y() - v.y()) < AM_EPSILON;
-   //  }
-   //  bool operator!=(const Mat4 &v) const {
-   //     return fabs(x() - v.x()) > AM_EPSILON || fabs(y() - v.y()) > AM_EPSILON;
-   //  }
+   // TODO: could this be sped up with SIMD?
+   bool operator==(const Mat3 &m) const {
+      return almostEqual(d[0], m.d[0]) && almostEqual(d[1], m.d[1]) && almostEqual(d[2], m.d[2]) &&
+             almostEqual(d[3], m.d[3]) && almostEqual(d[4], m.d[4]) && almostEqual(d[5], m.d[5]) &&
+             almostEqual(d[6], m.d[6]) && almostEqual(d[7], m.d[7]) && almostEqual(d[8], m.d[8]) &&
+             almostEqual(d[9], m.d[9]) && almostEqual(d[10], m.d[10]) &&
+             almostEqual(d[11], m.d[11]) && almostEqual(d[12], m.d[12]) &&
+             almostEqual(d[13], m.d[13]) && almostEqual(d[14], m.d[14]) &&
+             almostEqual(d[15], m.d[15]);
+   }
+   bool operator!=(const Mat3 &m) const {
+      return !almostEqual(d[0], m.d[0]) || !almostEqual(d[1], m.d[1]) ||
+             !almostEqual(d[2], m.d[2]) || !almostEqual(d[3], m.d[3]) ||
+             !almostEqual(d[4], m.d[4]) || !almostEqual(d[5], m.d[5]) ||
+             !almostEqual(d[6], m.d[6]) || !almostEqual(d[7], m.d[7]) ||
+             !almostEqual(d[8], m.d[8]) || !almostEqual(d[9], m.d[9]) ||
+             !almostEqual(d[10], m.d[10]) || !almostEqual(d[11], m.d[11]) ||
+             !almostEqual(d[12], m.d[12]) || !almostEqual(d[13], m.d[13]) ||
+             !almostEqual(d[14], m.d[14]) || !almostEqual(d[15], m.d[15]);
+   }
 };
 
 }  // namespace amath

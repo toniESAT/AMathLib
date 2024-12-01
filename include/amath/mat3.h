@@ -261,6 +261,19 @@ struct Mat3 {
       this->setCol(2, (*this) * m.getCol(2));
       return *this;
    }
+
+   // Comparison
+   bool operator==(const Mat3 &m) const {
+      return almostEqual(d[0], m.d[0]) && almostEqual(d[1], m.d[1]) && almostEqual(d[2], m.d[2]) &&
+             almostEqual(d[3], m.d[3]) && almostEqual(d[4], m.d[4]) && almostEqual(d[5], m.d[5]) &&
+             almostEqual(d[6], m.d[6]) && almostEqual(d[7], m.d[7]) && almostEqual(d[8], m.d[8]);
+   }
+   bool operator!=(const Mat3 &m) const {
+      return !almostEqual(d[0], m.d[0]) || !almostEqual(d[1], m.d[1]) ||
+             !almostEqual(d[2], m.d[2]) || !almostEqual(d[3], m.d[3]) ||
+             !almostEqual(d[4], m.d[4]) || !almostEqual(d[5], m.d[5]) ||
+             !almostEqual(d[6], m.d[6]) || !almostEqual(d[7], m.d[7]) || !almostEqual(d[8], m.d[8]);
+   }
 };
 
 }  // namespace amath

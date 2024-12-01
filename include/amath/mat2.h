@@ -150,12 +150,12 @@ struct Mat2 {
 
    // Comparison
    bool operator==(const Mat2 &m) const {
-      return fabs(d[0] - m.d[0]) < AM_EPSILON && fabs(d[1] - m.d[1]) < AM_EPSILON &&
-             fabs(d[2] - m.d[2]) < AM_EPSILON && fabs(d[3] - m.d[3]) < AM_EPSILON;
+      return almostEqual(d[0], m.d[0]) && almostEqual(d[1], m.d[1]) && almostEqual(d[2], m.d[2]) &&
+             almostEqual(d[3], m.d[3]);
    }
    bool operator!=(const Mat2 &m) const {
-      return fabs(d[0] - m.d[0]) > AM_EPSILON || fabs(d[1] - m.d[1]) > AM_EPSILON ||
-             fabs(d[2] - m.d[2]) > AM_EPSILON || fabs(d[3] - m.d[3]) > AM_EPSILON;
+      return !almostEqual(d[0], m.d[0]) || !almostEqual(d[1], m.d[1]) ||
+             !almostEqual(d[2], m.d[2]) || !almostEqual(d[3], m.d[3]);
    }
 };
 
