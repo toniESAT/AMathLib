@@ -247,17 +247,13 @@ struct Vec4 {
    scalar length() const { return sqrtf(lengthSquared()); }
 
    Vec4 normalized(scalar tolerance = AM_EPSILON) const {
-      scalar l = length();
-      if (!isAlmostZero(l, tolerance)) return {x() / l, y() / l, z() / l, w() / l};
-      else return {0, 0, 0, 0};
-   }
-
-   Vec4 norm_homogeneous(scalar tolerance = AM_EPSILON) const {
-      if (d[3] < tolerance) {
-         return normalized();
-      } else {
-         return *this * (1.f / d[3]);
-      }
+      scalar k = 1 / length();
+      // If homogeneous vector (w==0), normalize to length = 1
+      if (isAlmostZero(d[3]))
+         //  if (isAlmostZero(l, tolerance)) return {0, 0, 0, 0};  // TODO: Prevent div by 0 ???
+         return {x() * k, y() * k, z() * k, 0};
+      // If homogeneous point (w!=1), normalize to w = 1
+      return *this * (1.f / d[3]);
    }
 
    bool isNormalized(const scalar tolerance = AM_EPSILON) {
@@ -380,6 +376,8 @@ struct Mat2 {
    static int size() { return 4; }
 
    scalar det() const { return d[0] * d[3] - d[1] * d[2]; }
+
+   Mat2 transposed() const { return {d[0], d[2], d[1], d[3]}; };
 
    void print() const { printf("Mat2:\n[%.4f][%.4f]\n[%.4f][%.4f]", d[0], d[2], d[1], d[3]); }
 
@@ -544,15 +542,17 @@ struct Mat3 {
    static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
    static Mat3 nan() { return Mat3(nanf("")); };
 
+   scalar det() {  // By Sarrus' rule
+      return d[0] * d[4] * d[8] + d[2] * d[3] * d[7] + d[1] * d[5] * d[6] - d[2] * d[4] * d[6] -
+             d[1] * d[3] * d[8] - d[0] * d[5] * d[7];
+   }
+
+   Mat3 transposed() const { return {d[0], d[3], d[6], d[1], d[4], d[7], d[2], d[5], d[8]}; };
+
    void print() const {
       printf("Mat3:\n");
       for (int i = 0; i < 3; i++)
          printf("[%.4f][%.4f][%.4f]\n", d[3 * i], d[3 * i + 1], d[3 * i + 2]);
-   }
-
-   scalar det() {  // By Sarrus' rule
-      return d[0] * d[4] * d[8] + d[2] * d[3] * d[7] + d[1] * d[5] * d[6] - d[2] * d[4] * d[6] -
-             d[1] * d[3] * d[8] - d[0] * d[5] * d[7];
    }
 
    /*****************************
@@ -876,8 +876,33 @@ struct Mat4 {
       return det;
    }
 
+   Mat4 transposed() const {
+      return {d[0],
+              d[4],
+              d[8],
+              d[12],
+              d[1],
+              d[5],
+              d[9],
+              d[13],
+              d[2],
+              d[6],
+              d[10],
+              d[14],
+              d[3],
+              d[7],
+              d[11],
+              d[15]};
+   };
+
    std::vector<Vec4> transformPoints(const std::vector<Vec4> &points) const {
       std::vector<Vec4> transformed_points;
+      transformed_points.reserve(points.size());
+      for (auto p : points) transformed_points.push_back(*this * p);
+      return transformed_points;
+   }
+   std::vector<Vec3> transformPoints(const std::vector<Vec3> &points) const {
+      std::vector<Vec3> transformed_points;
       transformed_points.reserve(points.size());
       for (auto p : points) transformed_points.push_back(*this * p);
       return transformed_points;
@@ -1008,13 +1033,22 @@ struct Mat4 {
    }
 
    // Operations with vectors
+   // TODO: unroll these functions
    Vec4 operator*(const Vec4 &v) const {
-      return {
-          this->getRow(0).dot(v),
-          this->getRow(1).dot(v),
-          this->getRow(2).dot(v),
-          this->getRow(3).dot(v),
-      };
+      scalar w = d[3] * v.x() + d[7] * v.y() + d[11] * v.z() + d[15];
+
+      return {(d[0] * v.x() + d[4] * v.y() + d[8] * v.z() + d[12]) / w,
+              (d[1] * v.x() + d[5] * v.y() + d[9] * v.z() + d[13]) / w,
+              (d[2] * v.x() + d[6] * v.y() + d[10] * v.z() + d[14]) / w,
+              1};
+   }
+
+   Vec3 operator*(const Vec3 &v) const {
+      scalar w = d[3] * v.x() + d[7] * v.y() + d[11] * v.z() + d[15];
+
+      return {(d[0] * v.x() + d[4] * v.y() + d[8] * v.z() + d[12]) / w,
+              (d[1] * v.x() + d[5] * v.y() + d[9] * v.z() + d[13]) / w,
+              (d[2] * v.x() + d[6] * v.y() + d[10] * v.z() + d[14]) / w};
    }
 
    // Operations with other matrices
