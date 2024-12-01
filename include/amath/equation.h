@@ -8,6 +8,7 @@
 namespace amath {
 
 typedef Vec3 Eq2;  // For readability
+typedef Vec4 Eq3;
 
 enum class EqType {
    kUnsolved,
@@ -108,8 +109,6 @@ struct EqSystem2 {
       return solution;
    }
 };
-
-typedef Vec4 Eq3;
 
 struct EqSol3 {
    Vec3 values;
