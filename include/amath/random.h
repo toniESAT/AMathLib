@@ -14,7 +14,7 @@ struct RandomIntUniform {
 
    void seed(unsigned int seed) { gen.seed(seed); };
 
-   void set_range(int low, int high) { dist = std::uniform_int_distribution<int>(low, high); }
+   void setRange(int low, int high) { dist = std::uniform_int_distribution<int>(low, high); }
 
    int generate() { return dist(gen); }
 
@@ -33,7 +33,7 @@ struct RandomFloatUniform {
 
    void seed(unsigned int seed) { gen.seed(seed); };
 
-   void set_range(float low, float high) {
+   void setRange(float low, float high) {
       dist = std::uniform_real_distribution<float>(low, high);
    }
 

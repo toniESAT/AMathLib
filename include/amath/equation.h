@@ -2,7 +2,7 @@
 #define __EQUATION_H__
 
 #include <math.h>
-#include "core.h"
+#include "linalg.h"
 #include "utils.h"
 
 namespace amath {

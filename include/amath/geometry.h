@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <vector>
 
-#include "core.h"
+#include "linalg.h"
 #include "utils.h"
 #include "equation.h"
 
