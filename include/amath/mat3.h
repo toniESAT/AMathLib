@@ -28,15 +28,16 @@ struct Mat3 {
       setCol(1, v1);
       setCol(2, v2);
    }
+   
+   static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
+   static Mat3 nan() { return Mat3(nanf("")); };
 
-   // 2D transformation matrices (for 2D homogeneous coordinate systems)
    static Mat3 scaling(scalar sx, scalar sy) { return {sx, 0, 0, 0, sy, 0, 0, 0, 1}; }
    static Mat3 translation(scalar tx, scalar ty) { return {1, 0, 0, 0, 1, 0, tx, ty, 1}; }
    static Mat3 rotation(scalar a) { return {cosf(a), -sinf(a), 0, sinf(a), cosf(a), 0, 0, 0, 1}; }
 
-   // 3D transformation matrices (for 3D euclidean coordinate systems)
    static Mat3 rotationAroundAxis(Vec3 axis, scalar angle) {
-      if (!axis.isNormalized()) axis = axis.normalized();
+      axis = axis.normalized();
 
       // Sine, cosine and complements of angle
       scalar c = cosf(angle);
@@ -85,8 +86,6 @@ struct Mat3 {
     *****************************/
 
    static size_t size() { return 9; }
-   static Mat3 identity() { return {1, 0, 0, 0, 1, 0, 0, 0, 1}; }
-   static Mat3 nan() { return Mat3(nanf("")); };
 
    scalar det() {  // By Sarrus' rule
       return d[0] * d[4] * d[8] + d[2] * d[3] * d[7] + d[1] * d[5] * d[6] - d[2] * d[4] * d[6] -

@@ -84,7 +84,7 @@ struct Mat4 {
    }
 
    static Mat4 rotationAroundAxis(Vec4 axis, scalar angle) {
-      if (!axis.isNormalized()) axis = axis.normalized();
+      axis = axis.normalized();
 
       // Sine, cosine and complements of angle
       scalar c = cosf(angle);
@@ -128,22 +128,103 @@ struct Mat4 {
 
    static Mat4 perspective(scalar fov = PI / 2, scalar aspect = 1, scalar zNear = 1,
                            scalar zFar = 100) {
-      return {1.f / (aspect * tanf(fov / 2)),
+      return {// 1st col
+              1.f / (aspect * tanf(fov / 2)),
               0,
               0,
               0,
+              // 2nd col
               0,
               1.f / tanf(fov / 2),
               0,
               0,
+              //  3rd col
               0,
               0,
               zFar / (zFar - zNear),
               1,
+              // 4th col
               0,
               0,
-              (-zNear * zFar) / (zFar - zNear),
+              -zNear * zFar / (zFar - zNear),
               0};
+   }
+
+   static Mat4 view(Vec3 camera_pos, Vec3 camera_dir) {
+      Vec3 right = Vec3(0, 1, 0).cross(camera_dir);
+      Vec3 up = camera_dir.cross(right);
+
+      return {// 1st col
+              right.x(),
+              up.x(),
+              camera_dir.x(),
+              0,
+              // 2nd col
+              right.y(),
+              up.y(),
+              camera_dir.y(),
+              0,
+              //  3rd col
+              right.z(),
+              up.z(),
+              camera_dir.z(),
+              0,
+              // 4th col
+              -right.dot(camera_pos),
+              -up.dot(camera_pos),
+              -camera_dir.dot(camera_pos),
+              1};
+   }
+
+   static Mat4 lookAt(Vec3 position, Vec3 target, Vec3 world_up = {0, 0, 1}) {
+      Vec3 direction = Vec3(0, 1, 0).cross(target - position);
+      Vec3 right = world_up.cross(direction);
+      Vec3 up = direction.cross(right);
+
+      return {// 1st col
+              right.x(),
+              up.x(),
+              direction.x(),
+              0,
+              // 2nd col
+              right.y(),
+              up.y(),
+              direction.y(),
+              0,
+              //  3rd col
+              right.z(),
+              up.z(),
+              direction.z(),
+              0,
+              // 4th col
+              -right.dot(position),
+              -up.dot(position),
+              -direction.dot(position),
+              1};
+   }
+
+   static Mat4 ortho(scalar left, scalar right, scalar bottom, scalar top, scalar zNear,
+                     scalar zFar) {
+      return {// 1st col
+              ((scalar)2) / (right - left),
+              0,
+              0,
+              0,
+              // 2nd col
+              0,
+              ((scalar)2) / (top - bottom),
+              0,
+              0,
+              //  3rd col
+              0,
+              0,
+              ((scalar)-2) / (zFar - zNear),
+              0,
+              // 4th col
+              -(right + left) / (right - left),
+              -(top + bottom) / (top - bottom),
+              (zFar + zNear) / (zFar - zNear),
+              1};
    }
 
    /*****************************
