@@ -7,45 +7,73 @@
 
 namespace amath {
 
-typedef Vec3 Eq2;  // For readability
+/** @brief Type alias for representing a 2D equation (ax + by = c) using Vec3 */
+typedef Vec3 Eq2;
+/** @brief Type alias for representing a 3D equation (ax + by + cz = d) using Vec4 */
 typedef Vec4 Eq3;
 
+/**
+ * @brief Enumeration for different types of equation system solutions
+ */
 enum class EqType {
-   kUnsolved,
-   kIndependent,  // Unique solution
-   kDependent,
-   kInconsistent,
-   kNotIndependent  // Either dependent or inconsistent
+   kUnsolved,       ///< System hasn't been solved yet
+   kIndependent,    ///< System has a unique solution
+   kDependent,      ///< System has infinite solutions
+   kInconsistent,   ///< System has no solutions
+   kNotIndependent  ///< System is either dependent or inconsistent
 };
 
+/**
+ * @brief Solution structure for 2D equation systems
+ */
 struct EqSol2 {
-   Vec2 values;
-   EqType type;
+   Vec2 values;  ///< Solution values (x, y)
+   EqType type;  ///< Type of solution
 };
 
+/**
+ * @brief 2D linear equation system solver
+ *
+ * Solves systems of the form:
+ * a1x + b1y = c1
+ * a2x + b2y = c2
+ *
+ * Using Cramer's rule for independent systems.
+ */
 struct EqSystem2 {
-   Mat2 coef;
-   Vec2 constants;
-   EqSol2 solution = {Vec2::nan(), EqType::kUnsolved};
+   Mat2 coef;        ///< Coefficient matrix [a1 b1; a2 b2]
+   Vec2 constants;   ///< Constants vector [c1; c2]
+   EqSol2 solution;  ///< Solution of the system
 
+   /**
+    * @brief Constructs system from coefficient matrix and constants
+    * @param coefficients Matrix of coefficients
+    * @param constants Vector of constants
+    */
    EqSystem2(Mat2 coefficients, Vec2 constants) : coef(coefficients), constants(constants) {};
-   EqSystem2() : EqSystem2(Mat2{}, Vec2{}) {};  // Init all to 0
+
+   /**
+    * @brief Default constructor - initializes all values to 0
+    */
+   EqSystem2() : EqSystem2(Mat2{}, Vec2{}) {};
+
+   /**
+    * @brief Constructs system from two equations in Vec3 form
+    * @param eq1 First equation [a1, b1, c1]
+    * @param eq2 Second equation [a2, b2, c2]
+    */
    EqSystem2(const Eq2 &eq1, const Eq2 &eq2) {
-      /* Current implementation:
-                      Mat2 coef     Vec2 consts
-         Vec3 eq1 [a1 * x + b1 * y ] = [c1]
-         Vec3 eq2 [a2 * x + b2 * y ] = [c2]
-      */
-      coef[0] = eq1[0];
-      coef[2] = eq1[1];
-
-      coef[1] = eq2[0];
-      coef[3] = eq2[1];
-
-      constants[0] = eq1[2];
-      constants[1] = eq2[2];
+      coef[0] = eq1[0];       // a1
+      coef[2] = eq1[1];       // b1
+      coef[1] = eq2[0];       // a2
+      coef[3] = eq2[1];       // b2
+      constants[0] = eq1[2];  // c1
+      constants[1] = eq2[2];  // c2
    };
 
+   /**
+    * @brief Prints the equation system and its solution to stdout
+    */
    void print() {
       printf("2D linear equation system:\n");
 
@@ -74,19 +102,25 @@ struct EqSystem2 {
       }
    }
 
-   // CAUTION: return by reference
+   /**
+    * @brief Solves the equation system
+    *
+    * Uses Cramer's rule to solve the system when it's independent.
+    * For dependent systems, provides an example solution.
+    * For inconsistent systems, indicates no solution exists.
+    *
+    * @param only_independent If true, only solves for independent systems
+    * @return Reference to the solution structure
+    * @note Returns by reference to avoid copying
+    */
    EqSol2 &solve(bool only_independent = true) {
       scalar D = coef.det();
       bool zero_determinant = almostZero(D);
 
-      /* When  D=0,
-      D_x==0   and   D_y==0 -> Dependent System
-      D_x!=0   or    D_y!=0 -> Inconsistent System */
-
       if (zero_determinant && only_independent) {
          solution.values = Vec2::nan();
          solution.type = EqType::kNotIndependent;
-         return solution;  // If no unique solution, return early
+         return solution;
       }
 
       scalar D_x = coef[3] * constants[0] - coef[2] * constants[1];  // b2*c1-b1*c2
@@ -110,26 +144,48 @@ struct EqSystem2 {
    }
 };
 
+/**
+ * @brief Solution structure for 3D equation systems
+ */
 struct EqSol3 {
-   Vec3 values;
-   EqType type;
+   Vec3 values;  ///< Solution values (x, y, z)
+   EqType type;  ///< Type of solution
 };
 
+/**
+ * @brief 3D linear equation system solver
+ *
+ * Solves systems of the form:
+ * a1x + b1y + c1z = d1
+ * a2x + b2y + c2z = d2
+ * a3x + b3y + c3z = d3
+ *
+ * Using Cramer's rule for independent systems.
+ */
 struct EqSystem3 {
-   Mat3 coef;
-   Vec3 constants;
-   EqSol3 solution = {Vec3::nan(), EqType::kUnsolved};
+   Mat3 coef;        ///< Coefficient matrix [a1 b1 c1; a2 b2 c2; a3 b3 c3]
+   Vec3 constants;   ///< Constants vector [d1; d2; d3]
+   EqSol3 solution;  ///< Solution of the system
 
+   /**
+    * @brief Constructs system from coefficient matrix and constants
+    * @param coefficients Matrix of coefficients
+    * @param constants Vector of constants
+    */
    EqSystem3(Mat3 coefficients, Vec3 constants) : coef(coefficients), constants(constants) {};
-   EqSystem3() : EqSystem3(Mat3{}, Vec3{}) {};  // Init all to 0
-   EqSystem3(const Eq3 &eq1, const Eq3 &eq2, const Eq3 &eq3) {
-      /* Current implementation:
-                               Mat3 coef         Vec3 consts
-         Vec4/Eq3 eq1 [a1 * x + b1 * y + c1 * z] = [d1]
-         Vec4/Eq3 eq2 [a2 * x + b2 * y + c2 * z] = [d2]
-         Vec4/Eq3 eq3 [a3 * x + b3 * y + c3 * z] = [d3]
-      */
 
+   /**
+    * @brief Default constructor - initializes all values to 0
+    */
+   EqSystem3() : EqSystem3(Mat3{}, Vec3{}) {};
+
+   /**
+    * @brief Constructs system from three equations in Vec4 form
+    * @param eq1 First equation [a1, b1, c1, d1]
+    * @param eq2 Second equation [a2, b2, c2, d2]
+    * @param eq3 Third equation [a3, b3, c3, d3]
+    */
+   EqSystem3(const Eq3 &eq1, const Eq3 &eq2, const Eq3 &eq3) {
       coef.setRow(0, {eq1.x(), eq1.y(), eq1.z()});
       coef.setRow(1, {eq2.x(), eq2.y(), eq2.z()});
       coef.setRow(2, {eq3.x(), eq3.y(), eq3.z()});
@@ -139,6 +195,9 @@ struct EqSystem3 {
       constants[2] = eq3.w();
    };
 
+   /**
+    * @brief Prints the equation system and its solution to stdout
+    */
    void print() {
       printf("3D linear equation system:\n");
 
@@ -149,6 +208,7 @@ struct EqSystem3 {
                 coef[i + 3 * 1],
                 coef[i + 3 * 2],
                 constants[i]);
+
       printf("Solution: ");
       switch (solution.type) {
          case EqType::kIndependent:
@@ -165,32 +225,40 @@ struct EqSystem3 {
          case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
-   // CAUTION: return by reference
+
+   /**
+    * @brief Solves the equation system
+    *
+    * Uses Cramer's rule to solve the system when it's independent.
+    * For dependent and inconsistent systems, indicates the solution type
+    * but does not compute example solutions.
+    *
+    * @param only_independent If true, only solves for independent systems
+    * @return Reference to the solution structure
+    * @note Returns by reference to avoid copying
+    */
    EqSol3 &solve(bool only_independent = true) {
       scalar D = coef.det();
       bool zero_determinant = almostZero(D);
 
-      /* When  D=0,
-      D_x==0   and   D_y==0 and D_z==0-> Dependent System
-      D_x!=0   or    D_y!=0 or    D_z!=0-> Inconsistent System */
-
       if (zero_determinant && only_independent) {
          solution.values = Vec3::nan();
          solution.type = EqType::kNotIndependent;
-         return solution;  // If no unique solution, return early
+         return solution;
       }
 
+      // Calculate determinants for Cramer's rule
       scalar D_x = constants[0] * coef[4] * coef[8] + constants[2] * coef[3] * coef[7] +
-                  constants[1] * coef[5] * coef[6] - constants[2] * coef[4] * coef[6] -
-                  constants[1] * coef[3] * coef[8] - constants[0] * coef[5] * coef[7];
+                   constants[1] * coef[5] * coef[6] - constants[2] * coef[4] * coef[6] -
+                   constants[1] * coef[3] * coef[8] - constants[0] * coef[5] * coef[7];
 
       scalar D_y = coef[0] * constants[1] * coef[8] + coef[2] * constants[0] * coef[7] +
-                  coef[1] * constants[2] * coef[6] - coef[2] * constants[1] * coef[6] -
-                  coef[1] * constants[0] * coef[8] - coef[0] * constants[2] * coef[7];
+                   coef[1] * constants[2] * coef[6] - coef[2] * constants[1] * coef[6] -
+                   coef[1] * constants[0] * coef[8] - coef[0] * constants[2] * coef[7];
 
       scalar D_z = coef[0] * coef[4] * constants[2] + coef[2] * coef[3] * constants[1] +
-                  coef[1] * coef[5] * constants[0] - coef[2] * coef[4] * constants[0] -
-                  coef[1] * coef[3] * constants[2] - coef[0] * coef[5] * constants[1];
+                   coef[1] * coef[5] * constants[0] - coef[2] * coef[4] * constants[0] -
+                   coef[1] * coef[3] * constants[2] - coef[0] * coef[5] * constants[1];
 
       if (!zero_determinant) {
          solution.values = {D_x / D, D_y / D, D_z / D};
@@ -198,12 +266,8 @@ struct EqSystem3 {
       } else {
          solution.values = Vec3::nan();
          if (almostZero(D_x) && almostZero(D_y) && almostZero(D_z)) {
-            // Could be dependent in several different manners
-            // Currently, don't bother calculating a possible solution, just return NaN
-            // solution.values = Vec3::nan();
             solution.type = EqType::kDependent;
          } else {
-            // solution.values = Vec3::nan();
             solution.type = EqType::kInconsistent;
          }
       }
@@ -212,27 +276,55 @@ struct EqSystem3 {
    }
 };
 
+/**
+ * @brief Solution structure for 4D equation systems
+ */
 struct EqSol4 {
-   Vec4 values;
-   EqType type;
+   Vec4 values;  ///< Solution values (x, y, z, w)
+   EqType type;  ///< Type of solution
 };
 
+/**
+ * @brief 4D linear equation system solver
+ *
+ * Solves systems of the form:
+ * a1x + b1y + c1z + d1w = k1
+ * a2x + b2y + c2z + d2w = k2
+ * a3x + b3y + c3z + d3w = k3
+ * a4x + b4y + c4z + d4w = k4
+ *
+ * Using Cramer's rule for independent systems.
+ */
 struct EqSystem4 {
-   Mat4 coef;
-   Vec4 constants;
-   EqSol4 solution = {Vec4::nan(), EqType::kUnsolved};
+   Mat4 coef;        ///< Coefficient matrix [a1 b1 c1 d1; a2 b2 c2 d2; a3 b3 c3 d3; a4 b4 c4 d4]
+   Vec4 constants;   ///< Constants vector [k1; k2; k3; k4]
+   EqSol4 solution;  ///< Solution of the system
 
+   /**
+    * @brief Constructs system from coefficient matrix and constants
+    * @param coefficients Matrix of coefficients
+    * @param constants Vector of constants
+    */
    EqSystem4(Mat4 coefficients, Vec4 constants) : coef(coefficients), constants(constants) {};
-   EqSystem4() : EqSystem4(Mat4{}, Vec4{}) {};  // Init all to 0
+
+   /**
+    * @brief Default constructor - initializes all values to 0
+    */
+   EqSystem4() : EqSystem4(Mat4{}, Vec4{}) {};
+
+   /**
+    * @brief Constructs system from four coefficient vectors and constants
+    * @param coef1 First equation coefficients [a1, b1, c1, d1]
+    * @param const1 First equation constant k1
+    * @param coef2 Second equation coefficients [a2, b2, c2, d2]
+    * @param const2 Second equation constant k2
+    * @param coef3 Third equation coefficients [a3, b3, c3, d3]
+    * @param const3 Third equation constant k3
+    * @param coef4 Fourth equation coefficients [a4, b4, c4, d4]
+    * @param const4 Fourth equation constant k4
+    */
    EqSystem4(const Vec4 &coef1, const scalar const1, const Vec4 &coef2, const scalar const2,
              const Vec4 &coef3, const scalar const3, const Vec4 &coef4, const scalar const4) {
-      /*      args           Mat4 coef                   args   Vec4 consts
-         Vec4 coef1 [a1 * x + b1 * y + c1 * z + d1 * w] =  (scalar const1)   [k1]
-         Vec4 coef2 [a2 * x + b2 * y + c2 * z + d2 * w] =  (scalar const2)   [k2]
-         Vec4 coef3 [a3 * x + b3 * y + c3 * z + d3 * w] =  (scalar const3)   [k3]
-         Vec4 coef3 [a3 * x + b3 * y + c3 * z + d3 * w] =  (scalar const4)   [k3]
-      */
-
       coef.setRow(0, coef1);
       coef.setRow(1, coef2);
       coef.setRow(2, coef3);
@@ -244,6 +336,9 @@ struct EqSystem4 {
       constants[3] = const4;
    };
 
+   /**
+    * @brief Prints the equation system and its solution to stdout
+    */
    void print() {
       printf("4D linear equation system:\n");
 
@@ -255,10 +350,11 @@ struct EqSystem4 {
                 coef[i + 4 * 2],
                 coef[i + 4 * 3],
                 constants[i]);
+
       printf("Solution: ");
       switch (solution.type) {
          case EqType::kIndependent:
-            printf("x = %+.3f, y = %+.3f, z = %+.3f,  w = %+.3f\n",
+            printf("x = %+.3f, y = %+.3f, z = %+.3f, w = %+.3f\n",
                    solution.values.x(),
                    solution.values.y(),
                    solution.values.z(),
@@ -272,23 +368,33 @@ struct EqSystem4 {
          case EqType::kUnsolved: printf("Unsolved\n"); break;
       }
    }
-   // CAUTION: return by reference
+
+   /**
+    * @brief Solves the equation system
+    *
+    * Uses Cramer's rule to solve the system when it's independent.
+    * For dependent and inconsistent systems, indicates the solution type
+    * but does not compute example solutions.
+    *
+    * @param only_independent If true, only solves for independent systems
+    * @return Reference to the solution structure
+    * @note Returns by reference to avoid copying
+    */
    EqSol4 &solve(bool only_independent = true) {
       scalar D = coef.det();
       bool zero_determinant = almostZero(D);
 
-      /* When  D=0,
-      D_x==0   and   D_y==0 and D_z==0 and D_w==0-> Dependent System
-      D_x!=0   or    D_y!=0 or    D_z!=0 or  D_w!=0-> Inconsistent System */
-
       if (zero_determinant && only_independent) {
          solution.values = Vec4::nan();
          solution.type = EqType::kNotIndependent;
-         return solution;  // If no unique solution, return early
+         return solution;
       }
 
+      // Use Cramer's rule with temporary matrices
       Mat4 cramer_matrix;
       Vec4 cramer_determinants;
+
+      // Calculate determinant for each variable
       for (int i = 0; i < 4; i++) {
          cramer_matrix = coef;
          cramer_matrix.setCol(i, constants);
@@ -305,12 +411,8 @@ struct EqSystem4 {
 
          solution.values = Vec4::nan();
          if (is_dependent) {
-            // Could be dependent in several different manners
-            // Currently, don't bother calculating a possible solution, just return NaN
-            // solution.values = Vec3::nan();
             solution.type = EqType::kDependent;
          } else {
-            // solution.values = Vec3::nan();
             solution.type = EqType::kInconsistent;
          }
       }

@@ -6,6 +6,17 @@
 
 namespace amath {
 
+/**
+ * @brief Returns sorted indices of array elements
+ * 
+ * This function performs an indirect sort, returning the indices that would sort the array
+ * rather than sorting the array itself.
+ * 
+ * @tparam T Type of array elements
+ * @param array Vector to be indirectly sorted
+ * @param descending If true, sort in descending order; if false, ascending order
+ * @return Vector of indices that would sort the array
+ */
 template <typename T>
 inline std::vector<size_t> argsort(const std::vector<T> &array, const bool descending = false) {
    std::vector<size_t> indices(array.size());

@@ -1,3 +1,11 @@
+/**
+ * @file linalg.h
+ * @brief Convenience header that includes all linear algebra components
+ * 
+ * This header brings together all vector and matrix classes to provide
+ * a single include point for the complete linear algebra library.
+ */
+
 #ifndef __LINALG_H__
 #define __LINALG_H__
 
