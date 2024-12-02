@@ -13,7 +13,7 @@ typedef int64_t s64;
 typedef int32_t s32;
 typedef int8_t s8;
 
-#ifdef AM_DOUBLE_PRECISONs
+#ifdef AM_DOUBLE_PRECISON
 typedef double scalar;
 #define AM_EPSILON DBL_EPSILON
 #else
