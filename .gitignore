@@ -5,6 +5,8 @@ obj/
 *.suo
 *.VC.db
 
+.idea/
+
 # CPP
 # Prerequisites
 *.d
