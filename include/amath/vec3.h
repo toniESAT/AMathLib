@@ -9,7 +9,7 @@ namespace amath {
 
 /**
  * @brief A 3D vector class for mathematical operations
- * 
+ *
  * This class represents a 3D vector and provides various operations including:
  * - Basic arithmetic operations (+, -, *, /)
  * - Vector operations (dot product, cross product, normalization)
@@ -17,14 +17,14 @@ namespace amath {
  * - Common direction vectors (e.g., up)
  */
 struct Vec3 {
-   scalar d[3]; ///< Array storing vector components (x, y, z)
+   scalar d[3];  ///< Array storing vector components (x, y, z)
 
    /**
     * @name Constructors
     * Different ways to construct a Vec3 object
     */
    ///@{
-   
+
    /**
     * @brief Constructs a vector with specified components
     * @param v0 X component
@@ -32,13 +32,13 @@ struct Vec3 {
     * @param v2 Z component
     */
    Vec3(scalar v0, scalar v1, scalar v2) : d{v0, v1, v2} {};
-   
+
    /**
     * @brief Constructs a vector with all components set to the same value
     * @param v Value for all components
     */
    Vec3(scalar v) : d{v, v, v} {};
-   
+
    /**
     * @brief Default constructor - initializes to zero vector
     */
@@ -49,7 +49,7 @@ struct Vec3 {
     * @return Unit vector (0, 1, 0)
     */
    static Vec3 up() { return {0, 1, 0}; }
-   
+
    /**
     * @brief Creates a vector with NaN components
     * @return Vector with NaN components
@@ -62,37 +62,37 @@ struct Vec3 {
     * Methods for accessing vector components
     */
    ///@{
-   
+
    /**
     * @brief Gets the x component (const)
     * @return X component value
     */
    scalar x() const { return d[0]; }
-   
+
    /**
     * @brief Gets the y component (const)
     * @return Y component value
     */
    scalar y() const { return d[1]; }
-   
+
    /**
     * @brief Gets the z component (const)
     * @return Z component value
     */
    scalar z() const { return d[2]; }
-   
+
    /**
     * @brief Gets reference to x component
     * @return Reference to x component
     */
    scalar &x() { return d[0]; }
-   
+
    /**
     * @brief Gets reference to y component
     * @return Reference to y component
     */
    scalar &y() { return d[1]; }
-   
+
    /**
     * @brief Gets reference to z component
     * @return Reference to z component
@@ -105,13 +105,13 @@ struct Vec3 {
     * Core vector operations and utilities
     */
    ///@{
-   
+
    /**
     * @brief Calculates the squared length of the vector
     * @return Squared length
     */
    scalar lengthSquared() const { return x() * x() + y() * y() + z() * z(); }
-   
+
    /**
     * @brief Calculates the length of the vector
     * @return Vector length
@@ -165,7 +165,7 @@ struct Vec3 {
     * Operator overloads for vector operations
     */
    ///@{
-   
+
    /**
     * @brief Unary minus operator
     * @return Negated vector
@@ -178,21 +178,21 @@ struct Vec3 {
     * @return Result of the addition
     */
    Vec3 operator+(const scalar k) const { return {x() + k, y() + k, z() + k}; }
-   
+
    /**
     * @brief Scalar subtraction operator
     * @param k Scalar to subtract from each component
     * @return Result of the subtraction
     */
    Vec3 operator-(const scalar k) const { return {x() - k, y() - k, z() - k}; }
-   
+
    /**
     * @brief Scalar multiplication operator
     * @param k Scalar to multiply with each component
     * @return Result of the multiplication
     */
    Vec3 operator*(const scalar k) const { return {x() * k, y() * k, z() * k}; }
-   
+
    /**
     * @brief Scalar multiplication assignment operator
     * @param k Scalar to multiply with each component
@@ -204,14 +204,14 @@ struct Vec3 {
       d[2] *= k;
       return *this;
    }
-   
+
    /**
     * @brief Scalar division operator
     * @param k Scalar to divide each component by
     * @return Result of the division
     */
    Vec3 operator/(const scalar k) const { return {x() / k, y() / k, z() / k}; }
-   
+
    /**
     * @brief Scalar division assignment operator
     * @param k Scalar to divide each component by
@@ -230,14 +230,14 @@ struct Vec3 {
     * @return Result of the addition
     */
    Vec3 operator+(const Vec3 &v) const { return {x() + v.x(), y() + v.y(), z() + v.z()}; }
-   
+
    /**
     * @brief Vector subtraction operator
     * @param v Vector to subtract
     * @return Result of the subtraction
     */
    Vec3 operator-(const Vec3 &v) const { return {x() - v.x(), y() - v.y(), z() - v.z()}; }
-   
+
    /**
     * @brief Vector addition assignment operator
     * @param v Vector to add
@@ -249,7 +249,7 @@ struct Vec3 {
       z() += v.z();
       return *this;
    }
-   
+
    /**
     * @brief Vector subtraction assignment operator
     * @param v Vector to subtract
@@ -258,7 +258,7 @@ struct Vec3 {
    Vec3 &operator-=(Vec3 &v) {
       x() -= v.x();
       y() -= v.y();
-      z() -= v.z(); 
+      z() -= v.z();
       return *this;
    }
 
@@ -271,7 +271,7 @@ struct Vec3 {
       return fabs(x() - v.x()) < AM_EPSILON && fabs(y() - v.y()) < AM_EPSILON &&
              fabs(z() - v.z()) < AM_EPSILON;
    }
-   
+
    /**
     * @brief Inequality comparison operator
     * @param v Vector to compare with
@@ -288,7 +288,7 @@ struct Vec3 {
     * @return Value of the specified component
     */
    scalar operator[](const size_t i) const { return d[i]; }
-   
+
    /**
     * @brief Array subscript operator
     * @param i Index of component (0 for x, 1 for y, 2 for z)

@@ -344,7 +344,12 @@ struct Mat2 {
     * @param m Matrix to multiply with this matrix
     * @return Result of the multiplication
     */
-   Mat2 operator*(const Mat2 &m) { return Mat2((*this) * m.getCol(0), (*this) * m.getCol(1)); }
+   Mat2 operator*(const Mat2 &m) {
+      return {d[0] * m.d[0] + d[2] * m.d[1],
+              d[1] * m.d[0] + d[3] * m.d[1],
+              d[0] * m.d[2] + d[2] * m.d[3],
+              d[1] * m.d[2] + d[3] * m.d[3]};
+   }
 
    /**
     * @brief Matrix multiplication assignment operator
@@ -352,8 +357,11 @@ struct Mat2 {
     * @return Reference to this matrix
     */
    Mat2 &operator*=(const Mat2 &m) {
-      this->setCol(0, (*this) * m.getCol(0));
-      this->setCol(1, (*this) * m.getCol(1));
+      d[0] = d[0] * m.d[0] + d[2] * m.d[1];
+      d[1] = d[1] * m.d[0] + d[3] * m.d[1];
+      d[2] = d[0] * m.d[2] + d[2] * m.d[3];
+      d[3] = d[1] * m.d[2] + d[3] * m.d[3];
+
       return *this;
    }
 

@@ -386,7 +386,7 @@ struct Mat3 {
     * @return Resulting transformed 2D vector
     */
    Vec2 operator*(const Vec2 &v) const {
-      scalar w = d[2] * v.x() + d[5] * v.y();
+      scalar w = d[2] * v.x() + d[5] * v.y() + d[8];
       if (w == 0) w = 1;  // Prevent division by 0
       return {(d[0] * v.x() + d[3] * v.y() + d[6]) / w, (d[1] * v.x() + d[4] * v.y() + d[7]) / w};
    }
@@ -451,7 +451,15 @@ struct Mat3 {
     * @return Result of the multiplication
     */
    Mat3 operator*(const Mat3 &m) const {
-      return Mat3((*this) * m.getCol(0), (*this) * m.getCol(1), (*this) * m.getCol(2));
+      return {d[0] * m.d[0] + d[3] * m.d[1] + d[6] * m.d[2],
+              d[1] * m.d[0] + d[4] * m.d[1] + d[7] * m.d[2],
+              d[2] * m.d[0] + d[5] * m.d[1] + d[8] * m.d[2],
+              d[0] * m.d[3] + d[3] * m.d[4] + d[6] * m.d[5],
+              d[1] * m.d[3] + d[4] * m.d[4] + d[7] * m.d[5],
+              d[2] * m.d[3] + d[5] * m.d[4] + d[8] * m.d[5],
+              d[0] * m.d[6] + d[3] * m.d[7] + d[6] * m.d[8],
+              d[1] * m.d[6] + d[4] * m.d[7] + d[7] * m.d[8],
+              d[2] * m.d[6] + d[5] * m.d[7] + d[8] * m.d[8]};
    }
 
    /**
@@ -460,9 +468,19 @@ struct Mat3 {
     * @return Reference to this matrix
     */
    Mat3 &operator*=(const Mat3 &m) {
-      this->setCol(0, (*this) * m.getCol(0));
-      this->setCol(1, (*this) * m.getCol(1));
-      this->setCol(2, (*this) * m.getCol(2));
+      // 1st col
+      d[0] = d[0] * m.d[0] + d[3] * m.d[1] + d[6] * m.d[2];
+      d[1] = d[1] * m.d[0] + d[4] * m.d[1] + d[7] * m.d[2];
+      d[2] = d[2] * m.d[0] + d[5] * m.d[1] + d[8] * m.d[2];
+      // 2nd col
+      d[3] = d[0] * m.d[3] + d[3] * m.d[4] + d[6] * m.d[5];
+      d[4] = d[1] * m.d[3] + d[4] * m.d[4] + d[7] * m.d[5];
+      d[5] = d[2] * m.d[3] + d[5] * m.d[4] + d[8] * m.d[5];
+      // 3rd col
+      d[6] = d[0] * m.d[6] + d[3] * m.d[7] + d[6] * m.d[8];
+      d[7] = d[1] * m.d[6] + d[4] * m.d[7] + d[7] * m.d[8];
+      d[8] = d[2] * m.d[6] + d[5] * m.d[7] + d[8] * m.d[8];
+
       return *this;
    }
 

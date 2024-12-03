@@ -744,10 +744,22 @@ struct Mat4 {
     * @return Result of the multiplication
     */
    Mat4 operator*(const Mat4 &m) {
-      return Mat4((*this) * m.getCol(0),
-                  (*this) * m.getCol(1),
-                  (*this) * m.getCol(2),
-                  (*this) * m.getCol(3));
+      return {d[0] * m.d[0] + d[4] * m.d[1] + d[8] * m.d[2] + d[12] * m.d[3],
+              d[1] * m.d[0] + d[5] * m.d[1] + d[9] * m.d[2] + d[13] * m.d[3],
+              d[2] * m.d[0] + d[6] * m.d[1] + d[10] * m.d[2] + d[14] * m.d[3],
+              d[3] * m.d[0] + d[7] * m.d[1] + d[11] * m.d[2] + d[15] * m.d[3],
+              d[0] * m.d[4] + d[4] * m.d[5] + d[8] * m.d[6] + d[12] * m.d[7],
+              d[1] * m.d[4] + d[5] * m.d[5] + d[9] * m.d[6] + d[13] * m.d[7],
+              d[2] * m.d[4] + d[6] * m.d[5] + d[10] * m.d[6] + d[14] * m.d[7],
+              d[3] * m.d[4] + d[7] * m.d[5] + d[11] * m.d[6] + d[15] * m.d[7],
+              d[0] * m.d[8] + d[4] * m.d[9] + d[8] * m.d[10] + d[12] * m.d[11],
+              d[1] * m.d[8] + d[5] * m.d[9] + d[9] * m.d[10] + d[13] * m.d[11],
+              d[2] * m.d[8] + d[6] * m.d[9] + d[10] * m.d[10] + d[14] * m.d[11],
+              d[3] * m.d[8] + d[7] * m.d[9] + d[11] * m.d[10] + d[15] * m.d[11],
+              d[0] * m.d[12] + d[4] * m.d[13] + d[8] * m.d[14] + d[12] * m.d[15],
+              d[1] * m.d[12] + d[5] * m.d[13] + d[9] * m.d[14] + d[13] * m.d[15],
+              d[2] * m.d[12] + d[6] * m.d[13] + d[10] * m.d[14] + d[14] * m.d[15],
+              d[3] * m.d[12] + d[7] * m.d[13] + d[11] * m.d[14] + d[15] * m.d[15]};
    }
 
    /**
@@ -756,10 +768,23 @@ struct Mat4 {
     * @return Reference to this matrix
     */
    Mat4 &operator*=(const Mat4 &m) {
-      this->setCol(0, (*this) * m.getCol(0));
-      this->setCol(1, (*this) * m.getCol(1));
-      this->setCol(2, (*this) * m.getCol(2));
-      this->setCol(3, (*this) * m.getCol(3));
+      d[0] = d[0] * m.d[0] + d[4] * m.d[1] + d[8] * m.d[2] + d[12] * m.d[3];
+      d[1] = d[1] * m.d[0] + d[5] * m.d[1] + d[9] * m.d[2] + d[13] * m.d[3];
+      d[2] = d[2] * m.d[0] + d[6] * m.d[1] + d[10] * m.d[2] + d[14] * m.d[3];
+      d[3] = d[3] * m.d[0] + d[7] * m.d[1] + d[11] * m.d[2] + d[15] * m.d[3];
+      d[4] = d[0] * m.d[4] + d[4] * m.d[5] + d[8] * m.d[6] + d[12] * m.d[7];
+      d[5] = d[1] * m.d[4] + d[5] * m.d[5] + d[9] * m.d[6] + d[13] * m.d[7];
+      d[6] = d[2] * m.d[4] + d[6] * m.d[5] + d[10] * m.d[6] + d[14] * m.d[7];
+      d[7] = d[3] * m.d[4] + d[7] * m.d[5] + d[11] * m.d[6] + d[15] * m.d[7];
+      d[8] = d[0] * m.d[8] + d[4] * m.d[9] + d[8] * m.d[10] + d[12] * m.d[11];
+      d[9] = d[1] * m.d[8] + d[5] * m.d[9] + d[9] * m.d[10] + d[13] * m.d[11];
+      d[10] = d[2] * m.d[8] + d[6] * m.d[9] + d[10] * m.d[10] + d[14] * m.d[11];
+      d[11] = d[3] * m.d[8] + d[7] * m.d[9] + d[11] * m.d[10] + d[15] * m.d[11];
+      d[12] = d[0] * m.d[12] + d[4] * m.d[13] + d[8] * m.d[14] + d[12] * m.d[15];
+      d[13] = d[1] * m.d[12] + d[5] * m.d[13] + d[9] * m.d[14] + d[13] * m.d[15];
+      d[14] = d[2] * m.d[12] + d[6] * m.d[13] + d[10] * m.d[14] + d[14] * m.d[15];
+      d[15] = d[3] * m.d[12] + d[7] * m.d[13] + d[11] * m.d[14] + d[15] * m.d[15];
+
       return *this;
    }
 
