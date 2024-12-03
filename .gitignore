@@ -1,7 +1,9 @@
 bin/
 obj/
 *.sln
-*.vcxproj
+*.vcxproj*
+*.suo
+*.VC.db
 
 # CPP
 # Prerequisites
