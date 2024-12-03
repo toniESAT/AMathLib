@@ -8,6 +8,7 @@
 #include "utils.h"
 
 #include "vec3.h"
+#include "vec2.h"
 
 namespace amath {
 
