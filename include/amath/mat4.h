@@ -606,7 +606,22 @@ struct Mat4 {
     * @return Reference to this matrix
     */
    Mat4 &operator+=(scalar k) {
-      for (int i = 0; i < 16; i++) d[i] += k;
+      d[0] += k;
+      d[1] += k;
+      d[2] += k;
+      d[3] += k;
+      d[4] += k;
+      d[5] += k;
+      d[6] += k;
+      d[7] += k;
+      d[8] += k;
+      d[9] += k;
+      d[10] += k;
+      d[11] += k;
+      d[12] += k;
+      d[13] += k;
+      d[14] += k;
+      d[15] += k;
       return *this;
    }
 
@@ -616,7 +631,22 @@ struct Mat4 {
     * @return Reference to this matrix
     */
    Mat4 &operator-=(scalar k) {
-      *this += (-k);
+      d[0] -= k;
+      d[1] -= k;
+      d[2] -= k;
+      d[3] -= k;
+      d[4] -= k;
+      d[5] -= k;
+      d[6] -= k;
+      d[7] -= k;
+      d[8] -= k;
+      d[9] -= k;
+      d[10] -= k;
+      d[11] -= k;
+      d[12] -= k;
+      d[13] -= k;
+      d[14] -= k;
+      d[15] -= k;
       return *this;
    }
 
@@ -657,7 +687,22 @@ struct Mat4 {
     * @return Reference to this matrix
     */
    Mat4 operator*=(scalar k) {
-      for (int i = 0; i < 16; i++) d[i] *= k;
+      d[0] *= k;
+      d[1] *= k;
+      d[2] *= k;
+      d[3] *= k;
+      d[4] *= k;
+      d[5] *= k;
+      d[6] *= k;
+      d[7] *= k;
+      d[8] *= k;
+      d[9] *= k;
+      d[10] *= k;
+      d[11] *= k;
+      d[12] *= k;
+      d[13] *= k;
+      d[14] *= k;
+      d[15] *= k;
       return *this;
    }
 
@@ -702,9 +747,22 @@ struct Mat4 {
     * @return Result of the addition
     */
    Mat4 operator+(const Mat4 &m) const {
-      Mat4 result;
-      for (int i = 0; i < 16; i++) result.d[i] = d[i] + m.d[i];
-      return result;
+      return {d[0] + m.d[0],
+              d[1] + m.d[1],
+              d[2] + m.d[2],
+              d[3] + m.d[3],
+              d[4] + m.d[4],
+              d[5] + m.d[5],
+              d[6] + m.d[6],
+              d[7] + m.d[7],
+              d[8] + m.d[8],
+              d[9] + m.d[9],
+              d[10] + m.d[10],
+              d[11] + m.d[11],
+              d[12] + m.d[12],
+              d[13] + m.d[13],
+              d[14] + m.d[14],
+              d[15] + m.d[15]};
    }
 
    /**
@@ -713,9 +771,22 @@ struct Mat4 {
     * @return Result of the subtraction
     */
    Mat4 operator-(const Mat4 &m) const {
-      Mat4 result;
-      for (int i = 0; i < 16; i++) result.d[i] = d[i] - m.d[i];
-      return result;
+      return {d[0] - m.d[0],
+              d[1] - m.d[1],
+              d[2] - m.d[2],
+              d[3] - m.d[3],
+              d[4] - m.d[4],
+              d[5] - m.d[5],
+              d[6] - m.d[6],
+              d[7] - m.d[7],
+              d[8] - m.d[8],
+              d[9] - m.d[9],
+              d[10] - m.d[10],
+              d[11] - m.d[11],
+              d[12] - m.d[12],
+              d[13] - m.d[13],
+              d[14] - m.d[14],
+              d[15] - m.d[15]};
    }
 
    /**
@@ -724,7 +795,22 @@ struct Mat4 {
     * @return Reference to this matrix
     */
    Mat4 &operator+=(const Mat4 &m) {
-      for (int i = 0; i < 16; i++) d[i] += m.d[i];
+      d[0] += m.d[0];
+      d[1] += m.d[1];
+      d[2] += m.d[2];
+      d[3] += m.d[3];
+      d[4] += m.d[4];
+      d[5] += m.d[5];
+      d[6] += m.d[6];
+      d[7] += m.d[7];
+      d[8] += m.d[8];
+      d[9] += m.d[9];
+      d[10] += m.d[10];
+      d[11] += m.d[11];
+      d[12] += m.d[12];
+      d[13] += m.d[13];
+      d[14] += m.d[14];
+      d[15] += m.d[15];
       return *this;
    }
 
@@ -734,7 +820,22 @@ struct Mat4 {
     * @return Reference to this matrix
     */
    Mat4 &operator-=(const Mat4 &m) {
-      for (int i = 0; i < 16; i++) d[i] -= m.d[i];
+      d[0] -= m.d[0];
+      d[1] -= m.d[1];
+      d[2] -= m.d[2];
+      d[3] -= m.d[3];
+      d[4] -= m.d[4];
+      d[5] -= m.d[5];
+      d[6] -= m.d[6];
+      d[7] -= m.d[7];
+      d[8] -= m.d[8];
+      d[9] -= m.d[9];
+      d[10] -= m.d[10];
+      d[11] -= m.d[11];
+      d[12] -= m.d[12];
+      d[13] -= m.d[13];
+      d[14] -= m.d[14];
+      d[15] -= m.d[15];
       return *this;
    }
 

@@ -310,7 +310,10 @@ struct Mat3 {
     * @param k Scalar to subtract from each element
     * @return Result of the subtraction
     */
-   Mat3 operator-(const scalar k) const { return *this + (-k); }
+   Mat3 operator-(const scalar k) const {
+      return {
+          d[0] - k, d[1] - k, d[2] - k, d[3] - k, d[4] - k, d[5] - k, d[6] - k, d[7] - k, d[8] - k};
+   }
 
    /**
     * @brief Scalar addition assignment operator
@@ -318,7 +321,15 @@ struct Mat3 {
     * @return Reference to this matrix
     */
    Mat3 &operator+=(const scalar k) {
-      for (int i = 0; i < 9; i++) d[i] += k;
+      d[0] += k;
+      d[1] += k;
+      d[2] += k;
+      d[3] += k;
+      d[4] += k;
+      d[5] += k;
+      d[6] += k;
+      d[7] += k;
+      d[8] += k;
       return *this;
    }
 
@@ -328,7 +339,15 @@ struct Mat3 {
     * @return Reference to this matrix
     */
    Mat3 &operator-=(const scalar k) {
-      *this += (-k);
+      d[0] -= k;
+      d[1] -= k;
+      d[2] -= k;
+      d[3] -= k;
+      d[4] -= k;
+      d[5] -= k;
+      d[6] -= k;
+      d[7] -= k;
+      d[8] -= k;
       return *this;
    }
 
@@ -355,7 +374,15 @@ struct Mat3 {
     * @return Reference to this matrix
     */
    Mat3 &operator*=(const scalar k) {
-      for (int i = 0; i < 9; i++) d[i] *= k;
+      d[0] *= k;
+      d[1] *= k;
+      d[2] *= k;
+      d[3] *= k;
+      d[4] *= k;
+      d[5] *= k;
+      d[6] *= k;
+      d[7] *= k;
+      d[8] *= k;
       return *this;
    }
 
@@ -431,7 +458,15 @@ struct Mat3 {
     * @return Reference to this matrix
     */
    Mat3 &operator+=(const Mat3 &m) {
-      for (int i = 0; i < 9; i++) d[i] += m.d[i];
+      d[0] += m.d[0];
+      d[1] += m.d[1];
+      d[2] += m.d[2];
+      d[3] += m.d[3];
+      d[4] += m.d[4];
+      d[5] += m.d[5];
+      d[6] += m.d[6];
+      d[7] += m.d[7];
+      d[8] += m.d[8];
       return *this;
    }
 
@@ -441,7 +476,15 @@ struct Mat3 {
     * @return Reference to this matrix
     */
    Mat3 &operator-=(const Mat3 &m) {
-      for (int i = 0; i < 9; i++) d[i] -= m.d[i];
+      d[0] -= m.d[0];
+      d[1] -= m.d[1];
+      d[2] -= m.d[2];
+      d[3] -= m.d[3];
+      d[4] -= m.d[4];
+      d[5] -= m.d[5];
+      d[6] -= m.d[6];
+      d[7] -= m.d[7];
+      d[8] -= m.d[8];
       return *this;
    }
 

@@ -245,7 +245,10 @@ struct Mat2 {
     * @return Reference to this matrix
     */
    Mat2 &operator-=(const scalar k) {
-      *this += (-k);
+      d[0] -= k;
+      d[1] -= k;
+      d[2] -= k;
+      d[3] -= k;
       return *this;
    }
 
