@@ -684,12 +684,13 @@ struct Mat4 {
    }
 
    /**
-    * @brief Vector multiplication operator for 3D vectors (using homogeneous coordinates)
+    * @brief Vector multiplication operator for 3D vectors (affine transformation)
     * @param v Vector to multiply with this matrix
     * @return Resulting transformed 3D vector
     */
    Vec3 operator*(const Vec3 &v) const {
       scalar w = d[3] * v.x() + d[7] * v.y() + d[11] * v.z() + d[15];
+      if (w == 0) w = 1;  // Prevent division by 0
       return {(d[0] * v.x() + d[4] * v.y() + d[8] * v.z() + d[12]) / w,
               (d[1] * v.x() + d[5] * v.y() + d[9] * v.z() + d[13]) / w,
               (d[2] * v.x() + d[6] * v.y() + d[10] * v.z() + d[14]) / w};

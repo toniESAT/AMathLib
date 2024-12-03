@@ -381,12 +381,13 @@ struct Mat3 {
    }
 
    /**
-    * @brief Vector multiplication operator for 2D vectors (homogeneous transformation)
+    * @brief Vector multiplication operator for 2D vectors (affine transformation)
     * @param v Vector to multiply with this matrix
     * @return Resulting transformed 2D vector
     */
    Vec2 operator*(const Vec2 &v) const {
       scalar w = d[2] * v.x() + d[5] * v.y();
+      if (w == 0) w = 1;  // Prevent division by 0
       return {(d[0] * v.x() + d[3] * v.y() + d[6]) / w, (d[1] * v.x() + d[4] * v.y() + d[7]) / w};
    }
 
