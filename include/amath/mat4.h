@@ -672,16 +672,15 @@ struct Mat4 {
    }
 
    /**
-    * @brief Vector multiplication operator for homogeneous 4D vectors
+    * @brief Vector multiplication operator for 4D vectors
     * @param v Vector to multiply with this matrix
-    * @return Resulting transformed homogeneous vector
+    * @return Resulting transformed vector
     */
    Vec4 operator*(const Vec4 &v) const {
-      scalar w = d[3] * v.x() + d[7] * v.y() + d[11] * v.z() + d[15];
-      return {(d[0] * v.x() + d[4] * v.y() + d[8] * v.z() + d[12]) / w,
-              (d[1] * v.x() + d[5] * v.y() + d[9] * v.z() + d[13]) / w,
-              (d[2] * v.x() + d[6] * v.y() + d[10] * v.z() + d[14]) / w,
-              1};
+      return {d[0] * v.x() + d[4] * v.y() + d[8] * v.z() + d[12] * v.w(),
+              d[1] * v.x() + d[5] * v.y() + d[9] * v.z() + d[13] * v.w(),
+              d[2] * v.x() + d[6] * v.y() + d[10] * v.z() + d[14] * v.w(),
+              d[3] * v.x() + d[7] * v.y() + d[11] * v.z() + d[15] * v.w()};
    }
 
    /**

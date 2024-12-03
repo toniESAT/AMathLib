@@ -23,12 +23,17 @@ workspace "AMathLib"
 
 project "Tests"
    kind "ConsoleApp"
+   targetdir ("bin/")
+   objdir ("bin/obj/")
 
    files {
+      "test_vec_mat.cc",
       "test_eqsolver.cc",
+      "test_main.cc",
    }
    
    includedirs {
+     "doctest/",
      "../include/",
    }
 

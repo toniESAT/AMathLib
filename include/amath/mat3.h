@@ -375,9 +375,9 @@ struct Mat3 {
     * @return Resulting transformed 3D vector
     */
    Vec3 operator*(const Vec3 &v) const {
-      return {d[0] * v.x() + d[3] * v.y() + d[6],
-              d[1] * v.x() + d[4] * v.y() + d[7],
-              d[2] * v.x() + d[5] * v.y() + d[8]};
+      return {d[0] * v.x() + d[3] * v.y() + d[6] * v.z(),
+              d[1] * v.x() + d[4] * v.y() + d[7] * v.z(),
+              d[2] * v.x() + d[5] * v.y() + d[8] * v.z()};
    }
 
    /**
@@ -386,7 +386,7 @@ struct Mat3 {
     * @return Resulting transformed 2D vector
     */
    Vec2 operator*(const Vec2 &v) const {
-      scalar w = d[2] * v.x() + d[5] * v.y() + d[8];
+      scalar w = d[2] * v.x() + d[5] * v.y();
       return {(d[0] * v.x() + d[3] * v.y() + d[6]) / w, (d[1] * v.x() + d[4] * v.y() + d[7]) / w};
    }
 
