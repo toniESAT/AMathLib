@@ -1,5 +1,5 @@
-#ifndef __ALGORITHM_H__
-#define __ALGORITHM_H__
+#ifndef __AMATH_ALGORITHM_H__
+#define __AMATH_ALGORITHM_H__
 
 #include <vector>
 #include <algorithm>
@@ -8,10 +8,10 @@ namespace amath {
 
 /**
  * @brief Returns sorted indices of array elements
- * 
+ *
  * This function performs an indirect sort, returning the indices that would sort the array
  * rather than sorting the array itself.
- * 
+ *
  * @tparam T Type of array elements
  * @param array Vector to be indirectly sorted
  * @param descending If true, sort in descending order; if false, ascending order
@@ -32,4 +32,4 @@ inline std::vector<size_t> argsort(const std::vector<T> &array, const bool desce
 
 }  // namespace amath
 
-#endif /* __ALGORITHM_H__ */
+#endif /* __AMATH_ALGORITHM_H__ */

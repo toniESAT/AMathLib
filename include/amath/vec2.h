@@ -1,5 +1,5 @@
-#ifndef __VEC2_H__
-#define __VEC2_H__
+#ifndef __AMATH_VEC2_H__
+#define __AMATH_VEC2_H__
 
 #include <math.h>
 #include <stdio.h>
@@ -9,7 +9,7 @@ namespace amath {
 
 /**
  * @brief A 2D vector class for mathematical operations
- * 
+ *
  * This class represents a 2D vector and provides various operations including:
  * - Basic arithmetic operations (+, -, *, /)
  * - Vector operations (dot product, normalization)
@@ -17,27 +17,27 @@ namespace amath {
  * - Length calculations
  */
 struct Vec2 {
-   scalar d[2]; ///< Array storing vector components (x, y)
+   scalar d[2];  ///< Array storing vector components (x, y)
 
    /**
     * @name Constructors
     * Different ways to construct a Vec2 object
     */
    ///@{
-   
+
    /**
     * @brief Constructs a vector with specified components
     * @param v0 X component
     * @param v1 Y component
     */
    Vec2(scalar v0, scalar v1) : d{v0, v1} {};
-   
+
    /**
     * @brief Constructs a vector with both components set to the same value
     * @param v Value for both components
     */
    Vec2(scalar v) : d{v, v} {};
-   
+
    /**
     * @brief Default constructor - initializes to zero vector
     */
@@ -55,25 +55,25 @@ struct Vec2 {
     * Methods for accessing vector components
     */
    ///@{
-   
+
    /**
     * @brief Gets the x component (const)
     * @return X component value
     */
    scalar x() const { return d[0]; }
-   
+
    /**
     * @brief Gets the y component (const)
     * @return Y component value
     */
    scalar y() const { return d[1]; }
-   
+
    /**
     * @brief Gets reference to x component
     * @return Reference to x component
     */
    scalar &x() { return d[0]; }
-   
+
    /**
     * @brief Gets reference to y component
     * @return Reference to y component
@@ -86,13 +86,13 @@ struct Vec2 {
     * Core vector operations and utilities
     */
    ///@{
-   
+
    /**
     * @brief Calculates the squared length of the vector
     * @return Squared length
     */
    scalar lengthSquared() const { return x() * x() + y() * y(); }
-   
+
    /**
     * @brief Calculates the length of the vector
     * @return Vector length
@@ -143,7 +143,7 @@ struct Vec2 {
     * Operator overloads for vector operations
     */
    ///@{
-   
+
    /**
     * @brief Unary minus operator
     * @return Negated vector
@@ -156,21 +156,21 @@ struct Vec2 {
     * @return Result of the addition
     */
    Vec2 operator+(const scalar k) const { return {x() + k, y() + k}; }
-   
+
    /**
     * @brief Scalar subtraction operator
     * @param k Scalar to subtract from each component
     * @return Result of the subtraction
     */
    Vec2 operator-(const scalar k) const { return {x() - k, y() - k}; }
-   
+
    /**
     * @brief Scalar multiplication operator
     * @param k Scalar to multiply with each component
     * @return Result of the multiplication
     */
    Vec2 operator*(const scalar k) const { return {x() * k, y() * k}; }
-   
+
    /**
     * @brief Scalar multiplication assignment operator
     * @param k Scalar to multiply with each component
@@ -181,14 +181,14 @@ struct Vec2 {
       d[1] *= k;
       return *this;
    }
-   
+
    /**
     * @brief Scalar division operator
     * @param k Scalar to divide each component by
     * @return Result of the division
     */
    Vec2 operator/(const scalar k) const { return {x() / k, y() / k}; }
-   
+
    /**
     * @brief Scalar division assignment operator
     * @param k Scalar to divide each component by
@@ -206,14 +206,14 @@ struct Vec2 {
     * @return Result of the addition
     */
    Vec2 operator+(const Vec2 &v) const { return {x() + v.x(), y() + v.y()}; }
-   
+
    /**
     * @brief Vector subtraction operator
     * @param v Vector to subtract
     * @return Result of the subtraction
     */
    Vec2 operator-(const Vec2 &v) const { return {x() - v.x(), y() - v.y()}; }
-   
+
    /**
     * @brief Vector addition assignment operator
     * @param v Vector to add
@@ -224,7 +224,7 @@ struct Vec2 {
       y() += v.y();
       return *this;
    }
-   
+
    /**
     * @brief Vector subtraction assignment operator
     * @param v Vector to subtract
@@ -244,7 +244,7 @@ struct Vec2 {
    bool operator==(const Vec2 &v) const {
       return fabs(x() - v.x()) < AM_EPSILON && fabs(y() - v.y()) < AM_EPSILON;
    }
-   
+
    /**
     * @brief Inequality comparison operator
     * @param v Vector to compare with
@@ -260,7 +260,7 @@ struct Vec2 {
     * @return Value of the specified component
     */
    scalar operator[](const size_t i) const { return d[i]; }
-   
+
    /**
     * @brief Array subscript operator
     * @param i Index of component (0 for x, 1 for y)
@@ -272,4 +272,4 @@ struct Vec2 {
 
 }  // namespace amath
 
-#endif /* __VEC2_H__ */
+#endif /* __AMATH_VEC2_H__ */

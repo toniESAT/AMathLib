@@ -1,5 +1,5 @@
-#ifndef __RANDOM_H__
-#define __RANDOM_H__
+#ifndef __AMATH_RANDOM_H__
+#define __AMATH_RANDOM_H__
 
 #include <math.h>
 #include <random>
@@ -9,7 +9,7 @@ namespace amath {
 
 /**
  * @brief Uniform random integer generator
- * 
+ *
  * Generates random integers uniformly distributed in a specified range
  * using the Mersenne Twister engine (mt19937).
  */
@@ -44,15 +44,15 @@ struct RandomIntUniform {
    int generate() { return dist(gen); }
 
    private:
-   int low, high;                                   ///< Range bounds
-   std::random_device rd;                          ///< Random device for seeding
-   std::mt19937 gen;                              ///< Mersenne Twister generator
-   std::uniform_int_distribution<int> dist;       ///< Integer distribution
+   int low, high;                            ///< Range bounds
+   std::random_device rd;                    ///< Random device for seeding
+   std::mt19937 gen;                         ///< Mersenne Twister generator
+   std::uniform_int_distribution<int> dist;  ///< Integer distribution
 };
 
 /**
  * @brief Uniform random floating-point generator
- * 
+ *
  * Generates random floating-point numbers uniformly distributed in a specified range
  * using the Mersenne Twister engine (mt19937). Uses the scalar type defined in utils.h.
  */
@@ -89,12 +89,12 @@ struct RandomFloatUniform {
    scalar generate() { return dist(gen); }
 
    private:
-   scalar low, high;                                    ///< Range bounds
-   std::random_device rd;                              ///< Random device for seeding
-   std::mt19937 gen;                                   ///< Mersenne Twister generator
-   std::uniform_real_distribution<scalar> dist;        ///< Floating-point distribution
+   scalar low, high;                             ///< Range bounds
+   std::random_device rd;                        ///< Random device for seeding
+   std::mt19937 gen;                             ///< Mersenne Twister generator
+   std::uniform_real_distribution<scalar> dist;  ///< Floating-point distribution
 };
 
 }  // namespace amath
 
-#endif /* __RANDOM_H__ */
+#endif /* __AMATH_RANDOM_H__ */

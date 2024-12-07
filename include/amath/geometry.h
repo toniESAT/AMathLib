@@ -1,5 +1,5 @@
-#ifndef __GEOMETRY_H__
-#define __GEOMETRY_H__
+#ifndef __AMATH_GEOMETRY_H__
+#define __AMATH_GEOMETRY_H__
 
 #include <math.h>
 #include <stdio.h>
@@ -232,4 +232,4 @@ struct RegularPolygon {
 
 }  // namespace amath
 
-#endif /* __GEOMETRY_H__ */
+#endif /* __AMATH_GEOMETRY_H__ */

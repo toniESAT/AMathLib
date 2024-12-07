@@ -1,5 +1,5 @@
-#ifndef __EQUATION_H__
-#define __EQUATION_H__
+#ifndef __AMATH_EQUATION_H__
+#define __AMATH_EQUATION_H__
 
 #include <math.h>
 #include "linalg.h"
@@ -423,4 +423,4 @@ struct EqSystem4 {
 
 }  // namespace amath
 
-#endif /* __EQUATION_H__ */
+#endif /* __AMATH_EQUATION_H__ */

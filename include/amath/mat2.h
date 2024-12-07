@@ -1,5 +1,5 @@
-#ifndef __MAT2_H__
-#define __MAT2_H__
+#ifndef __AMATH_MAT2_H__
+#define __AMATH_MAT2_H__
 
 #include <math.h>
 #include <stdio.h>
@@ -392,4 +392,4 @@ struct Mat2 {
 
 }  // namespace amath
 
-#endif /* __MAT2_H__ */
+#endif /* __AMATH_MAT2_H__ */

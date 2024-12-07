@@ -1,5 +1,5 @@
-#ifndef __VEC3_H__
-#define __VEC3_H__
+#ifndef __AMATH_VEC3_H__
+#define __AMATH_VEC3_H__
 
 #include <math.h>
 #include <stdio.h>
@@ -300,4 +300,4 @@ struct Vec3 {
 
 }  // namespace amath
 
-#endif /* __VEC3_H__ */
+#endif /* __AMATH_VEC3_H__ */
