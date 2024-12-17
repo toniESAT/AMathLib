@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "utils.h"
+// #include "Vec4.h"
 
 namespace amath {
 
@@ -38,6 +39,12 @@ struct Vec3 {
     * @param v Value for all components
     */
    Vec3(scalar v) : d{v, v, v} {};
+
+   /**
+    * @brief Constructs a Vec3 from a Vec4, dropping the w component
+    * @param v A Vec4 object
+    */
+  //  Vec3(Vec4 v) : d{v.x(), v.y(), v.z()} {};
 
    /**
     * @brief Default constructor - initializes to zero vector

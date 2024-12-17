@@ -55,6 +55,14 @@ inline scalar Rad2Deg(const scalar a) { return a * (scalar)180.0 / PI; }
 inline scalar Deg2Rad(const scalar a) { return a * PI / (scalar)180.0; }
 
 /**
+ * @brief Function that returns the sign of a floating point number
+ * 
+ * @param k A scalar floating point number
+ * @return +1 if number was positive, -1 if negative
+ */
+inline int Sign(scalar k) { return k >= 0 ? 1 : -1; }
+
+/**
  * @brief Checks if a value is approximately zero
  * @param x Value to check
  * @param tolerance Maximum difference from zero (defaults to machine epsilon)

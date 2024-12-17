@@ -91,6 +91,11 @@ struct Plane {
    scalar A, B, C, D;  ///< Plane coefficients in Ax + By + Cz + D = 0 form
 
    /**
+    * @brief Empty constructor, initializes a plane with all params to zero
+    */
+   Plane() : A(0), B(0), C(0), D(0) {}
+
+   /**
     * @brief Constructs a plane from three points
     * @param pt0 First point
     * @param pt1 Second point
@@ -113,6 +118,14 @@ struct Plane {
     * @param distance Signed distance from origin to plane along normal
     */
    Plane(Vec3 normal, scalar distance) : A(normal.x()), B(normal.y()), C(normal.z()), D(distance) {}
+
+   /**
+    * @brief Constructs a point and a normal vector
+    * @param pt Point in 3D space
+    * @param normal Normal vector to the plane
+    */
+   Plane(Point3 pt, Vec3 normal)
+       : A(normal.x()), B(normal.y()), C(normal.z()), D(pt.length() * Sign(pt.dot(normal))) {}
 
    /**
     * @brief Gets the normal vector of the plane

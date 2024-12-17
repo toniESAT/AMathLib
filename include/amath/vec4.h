@@ -47,6 +47,12 @@ struct Vec4 {
    Vec4(scalar v) : d{v, v, v, v} {};
 
    /**
+    * @brief Constructs a Vec4 from a Vec3, setting w component to 0
+    * @param v Value for all components
+    */
+  //  Vec4(Vec3 v) : d{v.x(), v.y(), v.z(), 0} {};
+
+   /**
     * @brief Default constructor - initializes to zero vector
     */
    Vec4() : Vec4(0, 0, 0, 0) {};
@@ -331,6 +337,8 @@ struct Vec4 {
     */
    scalar &operator[](const size_t i) { return d[i]; }
    ///@}
+
+  //  operator amath::Vec3() const { return amath::Vec3(x(), y(), w()); }
 };
 
 }  // namespace amath

@@ -263,9 +263,10 @@ struct Mat4 {
               1,
               0,
               0,
-              -zNear * zFar / (zFar - zNear),
+              (-zNear * zFar) / (zFar - zNear),
               0};
    }
+
 
    /**
     * @brief Creates a view matrix from camera position and direction
@@ -273,9 +274,9 @@ struct Mat4 {
     * @param camera_dir Camera direction vector
     * @return View transformation matrix
     */
-   static Mat4 view(Vec3 camera_pos, Vec3 camera_dir) {
-      Vec3 right = Vec3(0, 1, 0).cross(camera_dir);
-      Vec3 up = camera_dir.cross(right);
+   static Mat4 view(Vec4 camera_pos, Vec4 camera_dir) {
+      Vec4 right = Vec4(0, 1, 0, 0).cross(camera_dir);
+      Vec4 up = camera_dir.cross(right);
 
       return {right.x(),
               up.x(),
@@ -354,6 +355,12 @@ struct Mat4 {
               (zFar + zNear) / (zFar - zNear),
               1};
    }
+
+   static Mat4 viewport(float width, float height) {
+      return amath::Mat4::translation(width / 2, height / 2, 0) *
+             amath::Mat4::scaling(width / 2, height / 2, 1);
+   };
+
    ///@}
    /**
     * @name Accessors
@@ -923,136 +930,69 @@ struct Mat4 {
    }
    ///@}
 
-  //https://stackoverflow.com/questions/1148309/inverting-a-4x4-matrix
+   // https://stackoverflow.com/questions/1148309/inverting-a-4x4-matrix
    Mat4 inverse() const {
-    Mat4 inv;
-    float det;
+      Mat4 inv;
+      float det;
 
-    inv.d[0] = d[5]  * d[10] * d[15] - 
-               d[5]  * d[11] * d[14] - 
-               d[9]  * d[6]  * d[15] + 
-               d[9]  * d[7]  * d[14] +
-               d[13] * d[6]  * d[11] - 
-               d[13] * d[7]  * d[10];
+      inv.d[0] = d[5] * d[10] * d[15] - d[5] * d[11] * d[14] - d[9] * d[6] * d[15] +
+                 d[9] * d[7] * d[14] + d[13] * d[6] * d[11] - d[13] * d[7] * d[10];
 
-    inv.d[4] = -d[4]  * d[10] * d[15] + 
-                d[4]  * d[11] * d[14] + 
-                d[8]  * d[6]  * d[15] - 
-                d[8]  * d[7]  * d[14] - 
-                d[12] * d[6]  * d[11] + 
-                d[12] * d[7]  * d[10];
+      inv.d[4] = -d[4] * d[10] * d[15] + d[4] * d[11] * d[14] + d[8] * d[6] * d[15] -
+                 d[8] * d[7] * d[14] - d[12] * d[6] * d[11] + d[12] * d[7] * d[10];
 
-    inv.d[8] = d[4]  * d[9] * d[15] - 
-               d[4]  * d[11] * d[13] - 
-               d[8]  * d[5] * d[15] + 
-               d[8]  * d[7] * d[13] + 
-               d[12] * d[5] * d[11] - 
-               d[12] * d[7] * d[9];
+      inv.d[8] = d[4] * d[9] * d[15] - d[4] * d[11] * d[13] - d[8] * d[5] * d[15] +
+                 d[8] * d[7] * d[13] + d[12] * d[5] * d[11] - d[12] * d[7] * d[9];
 
-    inv.d[12] = -d[4]  * d[9] * d[14] + 
-                 d[4]  * d[10] * d[13] +
-                 d[8]  * d[5] * d[14] - 
-                 d[8]  * d[6] * d[13] - 
-                 d[12] * d[5] * d[10] + 
-                 d[12] * d[6] * d[9];
+      inv.d[12] = -d[4] * d[9] * d[14] + d[4] * d[10] * d[13] + d[8] * d[5] * d[14] -
+                  d[8] * d[6] * d[13] - d[12] * d[5] * d[10] + d[12] * d[6] * d[9];
 
-    inv.d[1] = -d[1]  * d[10] * d[15] + 
-                d[1]  * d[11] * d[14] + 
-                d[9]  * d[2] * d[15] - 
-                d[9]  * d[3] * d[14] - 
-                d[13] * d[2] * d[11] + 
-                d[13] * d[3] * d[10];
+      inv.d[1] = -d[1] * d[10] * d[15] + d[1] * d[11] * d[14] + d[9] * d[2] * d[15] -
+                 d[9] * d[3] * d[14] - d[13] * d[2] * d[11] + d[13] * d[3] * d[10];
 
-    inv.d[5] = d[0]  * d[10] * d[15] - 
-               d[0]  * d[11] * d[14] - 
-               d[8]  * d[2] * d[15] + 
-               d[8]  * d[3] * d[14] + 
-               d[12] * d[2] * d[11] - 
-               d[12] * d[3] * d[10];
+      inv.d[5] = d[0] * d[10] * d[15] - d[0] * d[11] * d[14] - d[8] * d[2] * d[15] +
+                 d[8] * d[3] * d[14] + d[12] * d[2] * d[11] - d[12] * d[3] * d[10];
 
-    inv.d[9] = -d[0]  * d[9] * d[15] + 
-                d[0]  * d[11] * d[13] + 
-                d[8]  * d[1] * d[15] - 
-                d[8]  * d[3] * d[13] - 
-                d[12] * d[1] * d[11] + 
-                d[12] * d[3] * d[9];
+      inv.d[9] = -d[0] * d[9] * d[15] + d[0] * d[11] * d[13] + d[8] * d[1] * d[15] -
+                 d[8] * d[3] * d[13] - d[12] * d[1] * d[11] + d[12] * d[3] * d[9];
 
-    inv.d[13] = d[0]  * d[9] * d[14] - 
-                d[0]  * d[10] * d[13] - 
-                d[8]  * d[1] * d[14] + 
-                d[8]  * d[2] * d[13] + 
-                d[12] * d[1] * d[10] - 
-                d[12] * d[2] * d[9];
+      inv.d[13] = d[0] * d[9] * d[14] - d[0] * d[10] * d[13] - d[8] * d[1] * d[14] +
+                  d[8] * d[2] * d[13] + d[12] * d[1] * d[10] - d[12] * d[2] * d[9];
 
-    inv.d[2] = d[1]  * d[6] * d[15] - 
-               d[1]  * d[7] * d[14] - 
-               d[5]  * d[2] * d[15] + 
-               d[5]  * d[3] * d[14] + 
-               d[13] * d[2] * d[7] - 
-               d[13] * d[3] * d[6];
+      inv.d[2] = d[1] * d[6] * d[15] - d[1] * d[7] * d[14] - d[5] * d[2] * d[15] +
+                 d[5] * d[3] * d[14] + d[13] * d[2] * d[7] - d[13] * d[3] * d[6];
 
-    inv.d[6] = -d[0]  * d[6] * d[15] + 
-                d[0]  * d[7] * d[14] + 
-                d[4]  * d[2] * d[15] - 
-                d[4]  * d[3] * d[14] - 
-                d[12] * d[2] * d[7] + 
-                d[12] * d[3] * d[6];
+      inv.d[6] = -d[0] * d[6] * d[15] + d[0] * d[7] * d[14] + d[4] * d[2] * d[15] -
+                 d[4] * d[3] * d[14] - d[12] * d[2] * d[7] + d[12] * d[3] * d[6];
 
-    inv.d[10] = d[0]  * d[5] * d[15] - 
-                d[0]  * d[7] * d[13] - 
-                d[4]  * d[1] * d[15] + 
-                d[4]  * d[3] * d[13] + 
-                d[12] * d[1] * d[7] - 
-                d[12] * d[3] * d[5];
+      inv.d[10] = d[0] * d[5] * d[15] - d[0] * d[7] * d[13] - d[4] * d[1] * d[15] +
+                  d[4] * d[3] * d[13] + d[12] * d[1] * d[7] - d[12] * d[3] * d[5];
 
-    inv.d[14] = -d[0]  * d[5] * d[14] + 
-                 d[0]  * d[6] * d[13] + 
-                 d[4]  * d[1] * d[14] - 
-                 d[4]  * d[2] * d[13] - 
-                 d[12] * d[1] * d[6] + 
-                 d[12] * d[2] * d[5];
+      inv.d[14] = -d[0] * d[5] * d[14] + d[0] * d[6] * d[13] + d[4] * d[1] * d[14] -
+                  d[4] * d[2] * d[13] - d[12] * d[1] * d[6] + d[12] * d[2] * d[5];
 
-    inv.d[3] = -d[1] * d[6] * d[11] + 
-                d[1] * d[7] * d[10] + 
-                d[5] * d[2] * d[11] - 
-                d[5] * d[3] * d[10] - 
-                d[9] * d[2] * d[7] + 
-                d[9] * d[3] * d[6];
+      inv.d[3] = -d[1] * d[6] * d[11] + d[1] * d[7] * d[10] + d[5] * d[2] * d[11] -
+                 d[5] * d[3] * d[10] - d[9] * d[2] * d[7] + d[9] * d[3] * d[6];
 
-    inv.d[7] = d[0] * d[6] * d[11] - 
-               d[0] * d[7] * d[10] - 
-               d[4] * d[2] * d[11] + 
-               d[4] * d[3] * d[10] + 
-               d[8] * d[2] * d[7] - 
-               d[8] * d[3] * d[6];
+      inv.d[7] = d[0] * d[6] * d[11] - d[0] * d[7] * d[10] - d[4] * d[2] * d[11] +
+                 d[4] * d[3] * d[10] + d[8] * d[2] * d[7] - d[8] * d[3] * d[6];
 
-    inv.d[11] = -d[0] * d[5] * d[11] + 
-                 d[0] * d[7] * d[9] + 
-                 d[4] * d[1] * d[11] - 
-                 d[4] * d[3] * d[9] - 
-                 d[8] * d[1] * d[7] + 
-                 d[8] * d[3] * d[5];
+      inv.d[11] = -d[0] * d[5] * d[11] + d[0] * d[7] * d[9] + d[4] * d[1] * d[11] -
+                  d[4] * d[3] * d[9] - d[8] * d[1] * d[7] + d[8] * d[3] * d[5];
 
-    inv.d[15] = d[0] * d[5] * d[10] - 
-                d[0] * d[6] * d[9] - 
-                d[4] * d[1] * d[10] + 
-                d[4] * d[2] * d[9] + 
-                d[8] * d[1] * d[6] - 
-                d[8] * d[2] * d[5];
+      inv.d[15] = d[0] * d[5] * d[10] - d[0] * d[6] * d[9] - d[4] * d[1] * d[10] +
+                  d[4] * d[2] * d[9] + d[8] * d[1] * d[6] - d[8] * d[2] * d[5];
 
-    det = d[0] * inv.d[0] + d[1] * inv.d[4] + d[2] * inv.d[8] + d[3] * inv.d[12];
+      det = d[0] * inv.d[0] + d[1] * inv.d[4] + d[2] * inv.d[8] + d[3] * inv.d[12];
 
-    if (det == 0)
-        printf("Matrix is not invertible.");
+      if (det == 0) printf("Matrix is not invertible.");
 
-    det = 1.0f / det;
+      det = 1.0f / det;
 
-    for (int i = 0; i < 16; i++)
-        inv.d[i] = inv.d[i] * det;
+      for (int i = 0; i < 16; i++) inv.d[i] = inv.d[i] * det;
 
-    return inv;
-}
-
+      return inv;
+   }
 };
 
 }  // namespace amath
