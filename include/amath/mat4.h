@@ -247,14 +247,16 @@ struct Mat4 {
     * @param zFar Far clipping plane distance (default: 100)
     * @return Perspective projection matrix
     */
-   static Mat4 perspective(scalar fov = PI / 2, scalar aspect = 1, scalar zNear = 1,
+   static Mat4 perspective(scalar fovX = PI / 2, scalar aspect = 1, scalar zNear = 1,
                            scalar zFar = 100) {
-      return {1.f / (aspect * tanf(fov / 2)),
+      float inv_tan = 1.f / tanf(fovX / 2);
+
+      return {inv_tan,
               0,
               0,
               0,
               0,
-              1.f / tanf(fov / 2),
+              aspect * inv_tan,
               0,
               0,
               0,
@@ -263,10 +265,9 @@ struct Mat4 {
               1,
               0,
               0,
-              (-zNear * zFar) / (zFar - zNear),
+              -(zNear * zFar) / (zFar - zNear),
               0};
    }
-
 
    /**
     * @brief Creates a view matrix from camera position and direction
@@ -275,8 +276,8 @@ struct Mat4 {
     * @return View transformation matrix
     */
    static Mat4 view(Vec4 camera_pos, Vec4 camera_dir) {
-      Vec4 right = Vec4(0, 1, 0, 0).cross(camera_dir);
-      Vec4 up = camera_dir.cross(right);
+      Vec4 right = Vec4(0, 1, 0, 0).cross(camera_dir).normalized();
+      Vec4 up = camera_dir.cross(right).normalized();
 
       return {right.x(),
               up.x(),

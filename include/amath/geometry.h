@@ -152,7 +152,7 @@ struct Plane {
     * @param pt Point to test
     * @return 1 if point is on positive side, -1 if on negative side
     */
-   int side(Point3 pt) { return A * pt.x() + B * pt.y() + C * pt.z() - D > 0 ? 1 : -1; }
+   int side(Point3 pt) { return A * pt.x() + B * pt.y() + C * pt.z() + D > 0 ? 1 : -1; }
 
    /**
     * @brief Calculates intersection point with a line
