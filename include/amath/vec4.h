@@ -38,7 +38,7 @@ struct Vec4 {
     * @param v2 Z component
     * @param v3 W component
     */
-   Vec4(scalar v0, scalar v1, scalar v2, scalar v3) : d{v0, v1, v2, v3} {};
+   Vec4(scalar v0, scalar v1, scalar v2, scalar v3 = 0) : d{v0, v1, v2, v3} {};
 
    /**
     * @brief Constructs a vector with all components set to the same value

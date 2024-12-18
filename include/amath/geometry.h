@@ -124,8 +124,13 @@ struct Plane {
     * @param pt Point in 3D space
     * @param normal Normal vector to the plane
     */
-   Plane(Point3 pt, Vec3 normal)
-       : A(normal.x()), B(normal.y()), C(normal.z()), D(pt.length() * Sign(pt.dot(normal))) {}
+   Plane(Point3 pt, Vec3 normal) {
+      Vec3 n = normal.normalized();
+      A = n.x();
+      B = n.y();
+      C = n.z();
+      D = -(n.dot(pt));
+   }
 
    /**
     * @brief Gets the normal vector of the plane
