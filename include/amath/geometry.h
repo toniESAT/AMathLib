@@ -155,6 +155,13 @@ struct Plane {
    int side(Point3 pt) { return A * pt.x() + B * pt.y() + C * pt.z() + D > 0 ? 1 : -1; }
 
    /**
+    * @brief Determines which side of the plane a point lies on
+    * @param pt Point to test
+    * @return 1 if point is on positive side, -1 if on negative side
+    */
+   int side(Vec4 pt) { return A * pt.x() + B * pt.y() + C * pt.z() + D > 0 ? 1 : -1; }
+
+   /**
     * @brief Calculates intersection point with a line
     * @param s Line to intersect with
     * @return Point of intersection
